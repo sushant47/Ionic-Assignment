@@ -19,6 +19,11 @@
                     </ion-item>
 
                     <ion-item class="signup-input">
+                        <ion-label floating>Email Id</ion-label>
+                        <ion-input type="email"></ion-input>
+                    </ion-item>
+
+                    <ion-item class="signup-input">
                         <ion-label floating>Password</ion-label>
                         <ion-input type="password"></ion-input>
                     </ion-item>
@@ -31,11 +36,11 @@
                 </ion-list>
             </ion-col>
         </ion-row>
-
+<button class="signup-button" (click) = "signUp()" ion-button block color="dark" outline >SignUp</button>
     </div>
 
 
-    <button class="signup-button" ion-button block color="dark" outline>SignUp</button>
+    
 
 
 </ion-content>
