@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import {SignUp} from '../pages/home/signup';
 import {Login} from '../pages/home/login';
+import { HttpModule }    from '@angular/http';
 @NgModule({
   declarations: [
     MyApp,
@@ -17,6 +18,7 @@ import {Login} from '../pages/home/login';
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
