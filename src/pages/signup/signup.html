@@ -20,7 +20,7 @@
 
                     <ion-item class="signup-input">
                         <ion-label floating>Email Id</ion-label>
-                        <ion-input type="email" [(ngModel)]="register.emailId"></ion-input>
+                        <ion-input type="email" [(ngModel)]="register.emailId" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></ion-input>
                     </ion-item>
 
                     <ion-item class="signup-input">

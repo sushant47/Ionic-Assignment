@@ -1,0 +1,22 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Extentia Cafe Outlets
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding class="background">
+
+   <ion-list inset>
+  <ion-item *ngFor="let item of items">
+    {{ item.name }}
+    <h2>{{item.location}}</h2>
+    <h3>{{item.description}}</h3>
+  </ion-item> 
+</ion-list>
+  
+</ion-content>
+<ion-fab bottom right>
+    <button ion-fab mini (click) = "addNewCafe()"><ion-icon name="add"></ion-icon></button>
+</ion-fab>  

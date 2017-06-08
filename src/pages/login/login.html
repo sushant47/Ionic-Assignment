@@ -30,9 +30,10 @@
   </div>
 
 
-  <button class="login-button" [disabled]="!userLogin.emailId || !userLogin.password" (click) = "login()" ion-button block color="dark" outline>Login</button>
+  <button class="login-button" [disabled]="!userLogin.emailId || !userLogin.password" (click)="login()" ion-button block color="dark"
+    outline>Login</button>
 
-  <button class="signUp-button" (click) = "goBackSignUp()" ion-button block color="dark" outline>Sign Up</button>
+  <button class="signUp-button" (click)="goBackSignUp()" ion-button block color="dark" outline>Sign Up</button>
 
 
 </ion-content>

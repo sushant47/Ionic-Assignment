@@ -6,15 +6,20 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import {SignUp} from '../pages/home/signup';
-import {Login} from '../pages/home/login';
+import {SignUp} from '../pages/signup/signup';
+import {Login} from '../pages/login/login';
+import {CafeOutlets} from '../pages/cafeoutlets/cafeoutlets';
 import { HttpModule }    from '@angular/http';
+import { ModalPage } from '../pages/modal/modalpage';
+
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     SignUp,
-    Login
+    Login,
+    CafeOutlets,
+    ModalPage
   ],
   imports: [
     BrowserModule,
@@ -26,7 +31,9 @@ import { HttpModule }    from '@angular/http';
     MyApp,
     HomePage,
     SignUp,
-    Login
+    Login,
+    CafeOutlets,
+    ModalPage
   ],
   providers: [
     StatusBar,

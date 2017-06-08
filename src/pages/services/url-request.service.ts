@@ -18,7 +18,7 @@ export class UrlRequestService {
     //   email: 'sushantbilg@gmail.com',
     //   password: '123456789'
     // }
-    alert(url);
+    //alert(url);
 
     return this.http.post(url,postParams, options);
                         

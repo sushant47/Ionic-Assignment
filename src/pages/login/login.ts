@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import {UrlRequestService} from '../services/url-request.service';
-import {SignUp} from './signup';
+import {SignUp} from '../signup/signup';
+import {CafeOutlets} from '../cafeoutlets/cafeoutlets';
 
 export class UserLogin {
 
@@ -21,11 +22,13 @@ export class Login {
   userLogin: UserLogin = new UserLogin();
   constructor(public navCtrl: NavController, private urlRequestService: UrlRequestService) {
 
+
+
   }
+  
 
 login(): void {
-    //alert("" + this.register.userName);
-    //this.postRequest();
+   
     let postParams = {
       email: this.userLogin.emailId,
       password: this.userLogin.password
@@ -42,11 +45,15 @@ login(): void {
         var stat = data['_body'];
         stat = JSON.parse(data['_body']);; 
         console.log(stat.status);
-        // if(stat.status){
+        if(stat.status == "SUCCESS"){
 
-        //   this.navCtrl.push(Login);
+          localStorage.setItem("userid", this.userLogin.emailId);
+          localStorage.setItem("password", this.userLogin.password);
+          console.log(localStorage.getItem("userid"));
+          console.log(localStorage.getItem("password"));
+          this.navCtrl.push(CafeOutlets);
 
-        // }
+        }
         //this.response = data['_body'];
         //return(this.response);
         //return Promise.resolve(UrlRequestService);

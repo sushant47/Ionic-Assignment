@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+    <button (click)="dismiss()">
+      Cancel
+    </button>
+  </ion-buttons>
+  <ion-title>Add a Café outlet</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+<ion-content padding class="sample-modal-page">
+  <ion-item>
+  <ion-label class="row 30">Name</ion-label>
+  <ion-input type="text" placeholder="Cafe Name" [(ngModel)]="cafeDetails.name"></ion-input>
+</ion-item>
+ <ion-item>
+  <ion-label class="row 30">Location</ion-label>
+  <ion-input type="text" placeholder="Cafe Location" [(ngModel)]="cafeDetails.location"></ion-input>
+</ion-item>
+ <ion-item>
+  <ion-label class="row 30">Description</ion-label>
+  <ion-input type="text" placeholder="Cafe DEscription" [(ngModel)]="cafeDetails.description"></ion-input>
+</ion-item>
+<button class="modal" [disabled]="!cafeDetails.name || !cafeDetails.location || !cafeDetails.description" (click) = "addCafe()" ion-button block color="dark" outline >Add Cafe</button>
+</ion-content>
+
+
+<!--<ion-toolbar primary>
+  <ion-buttons start>
+    <button (click)="dismiss()">
+      Cancel
+    </button>
+  </ion-buttons>
+  <ion-title>Add a Café outlet</ion-title>
+</ion-toolbar>-->
