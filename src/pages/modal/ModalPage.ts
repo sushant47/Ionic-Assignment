@@ -59,7 +59,7 @@ export class ModalPage {
 
         console.log("added successfully");
         
-        this.viewCtrl.dismiss();
+        this.viewCtrl.dismiss("success");
 
       }
       

@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { UrlRequestService } from '../services/url-request.service';
 import { SignUp } from '../signup/signup';
 import { CafeOutlets } from '../cafeoutlets/cafeoutlets';
+import { TabsPage } from '../tabs/tabs';
 
 @Component({
   selector: 'page-login',
@@ -51,7 +52,7 @@ export class Login {
         localStorage.setItem("password", this.userLogin.password);
         console.log(localStorage.getItem("userid"));
         console.log(localStorage.getItem("password"));
-        this.navCtrl.push(CafeOutlets);
+        this.navCtrl.push(TabsPage);
 
       }
       //this.response = data['_body'];

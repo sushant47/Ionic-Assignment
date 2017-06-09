@@ -11,6 +11,9 @@ import {Login} from '../pages/login/login';
 import {CafeOutlets} from '../pages/cafeoutlets/cafeoutlets';
 import { HttpModule }    from '@angular/http';
 import { ModalPage } from '../pages/modal/modalpage';
+import { TabsPage } from '../pages/tabs/tabs';
+import { CafeLocation } from '../pages/cafelocation/cafelocation';
+import { Geolocation } from '@ionic-native/geolocation';
 
 @NgModule({
   declarations: [
@@ -19,7 +22,9 @@ import { ModalPage } from '../pages/modal/modalpage';
     SignUp,
     Login,
     CafeOutlets,
-    ModalPage
+    ModalPage,
+    TabsPage,
+    CafeLocation
   ],
   imports: [
     BrowserModule,
@@ -33,11 +38,14 @@ import { ModalPage } from '../pages/modal/modalpage';
     SignUp,
     Login,
     CafeOutlets,
-    ModalPage
+    ModalPage,
+    TabsPage,
+    CafeLocation
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

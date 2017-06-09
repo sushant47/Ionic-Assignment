@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { SignUp } from '../pages/signup/signup';
 import { Login } from '../pages/login/login';
 import { CafeOutlets } from '../pages/cafeoutlets/cafeoutlets';
+import { TabsPage } from '../pages/tabs/tabs';
 @Component({
   templateUrl: 'app.html',
   providers: [UrlRequestService]
@@ -18,39 +19,39 @@ export class MyApp {
     platform.ready().then(() => {
       if ("userid" in localStorage && "password" in localStorage) {
 
-        
+
         let postParams = {
-      email: localStorage.getItem("userid"),
-      password: localStorage.getItem("password")
-    }
-
-    
-
-    let url:string = 'https://extcafe.herokuapp.com/api/login';
-    console.log(postParams.email);
-    console.log(postParams.password);
-    this.urlRequestService.postRequest(postParams,url).subscribe(data => {
-        
-        console.log(data['_body']);
-        var stat = data['_body'];
-        stat = JSON.parse(data['_body']);; 
-        console.log(stat.status);
-        if(stat.status == "SUCCESS"){
-
-          
-          this.rootPage = CafeOutlets;
-
+          email: localStorage.getItem("userid"),
+          password: localStorage.getItem("password")
         }
-       
-       }, error => {
-         alert("error" + error);
-        console.log(error);
-       
-      });
+
+
+
+        let url: string = 'https://extcafe.herokuapp.com/api/login';
+        console.log(postParams.email);
+        console.log(postParams.password);
+        this.urlRequestService.postRequest(postParams, url).subscribe(data => {
+
+          console.log(data['_body']);
+          var stat = data['_body'];
+          stat = JSON.parse(data['_body']);;
+          console.log(stat.status);
+          if (stat.status == "SUCCESS") {
+
+
+            this.rootPage = TabsPage;
+
+          }
+
+        }, error => {
+          alert("error" + error);
+          console.log(error);
+
+        });
 
       }
       else {
-         this.rootPage = Login;
+        this.rootPage = Login;
       }
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

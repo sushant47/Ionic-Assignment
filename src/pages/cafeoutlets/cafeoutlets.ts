@@ -30,6 +30,10 @@ export class CafeOutlets {
     }
 
 
+ionSelected() {
+   // alert("Home Page has been selected");
+    
+  }
     presentToast() {
         let toast = this.toastCtrl.create({
             message: 'Extentia Cafe Outlet Added Successfully',
@@ -46,9 +50,15 @@ export class CafeOutlets {
         modal.present();
 
         modal.onDidDismiss(data => {
-            console.log(data);
+            if(data=="success"){
             that.presentToast();
-            that.postRequest();
+            that.postRequest();   
+        }
+        else{
+            console.log(data);
+        }
+          
+           
          });
 
     }
