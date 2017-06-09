@@ -7,6 +7,7 @@ import { AlertController } from 'ionic-angular';
 import { Login } from '../login/login';
 import { ModalController, NavParams } from 'ionic-angular';
 import { ModalPage } from '../modal/modalpage';
+import { ToastController } from 'ionic-angular';
 
 let Title: string;
 let Msg: string;
@@ -23,19 +24,32 @@ let user_id: string;
 export class CafeOutlets {
 
     public items: any;
- 
-    constructor(public navCtrl: NavController, public http: Http, private urlRequestService: UrlRequestService, public alertCtrl: AlertController, public modalCtrl: ModalController) {
+
+    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public http: Http, private urlRequestService: UrlRequestService, public alertCtrl: AlertController, public modalCtrl: ModalController) {
         this.postRequest();
     }
 
 
+    presentToast() {
+        let toast = this.toastCtrl.create({
+            message: 'Extentia Cafe Outlet Added Successfully',
+            duration: 2000,
+            position: 'bottom'
+        });
+        toast.present();
+    }
+
     presentModal() {
+
+        let that = this;
         let modal = this.modalCtrl.create(ModalPage);
         modal.present();
 
         modal.onDidDismiss(data => {
             console.log(data);
-        });
+            that.presentToast();
+            that.postRequest();
+         });
 
     }
 

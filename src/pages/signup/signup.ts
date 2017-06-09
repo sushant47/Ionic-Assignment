@@ -8,14 +8,6 @@ import { AlertController } from 'ionic-angular';
 let Title: string;
 let Msg: string;
 let btn: string;
-export class Register {
-
-  public userName: string;
-  public emailId: string;
-  public password: string;
-  public confirmPassword: string;
-
-}
 
 @Component({
   selector: 'page-signup',
@@ -25,17 +17,24 @@ export class Register {
 
 export class SignUp {
 
+  register: {
+    userName: string,
+    emailId: string,
+    password: string,
+    confirmPassword: string
+  }
 
-  register: Register = new Register();
+
   constructor(public navCtrl: NavController, public http: Http, private urlRequestService: UrlRequestService, public alertCtrl: AlertController) {
-    // this.http.post('https://extcafe.herokuapp.com/api/register','{'sushant','sushantbilgi47@gmail.com', '123456789'}').map(res => res.json()).subscribe(data =>{
-    //   let a = data;
-    //   alert(a);
-    // });
-    // this.http.post('https://www.reddit.com/r/gifs/new/.json?limit=10').map(res => res.json()).subscribe(data => {
-    //     //this.posts = data.data.children;
-    // });
-    //this.navCtrl.push(Login);
+
+    this.register = {
+      userName: '',
+      emailId: '',
+      password: '',
+      confirmPassword: ''
+
+    }
+
   }
 
 
@@ -51,7 +50,7 @@ export class SignUp {
     console.log(postParams.username);
     console.log(postParams.email);
     this.urlRequestService.postRequest(postParams, url).subscribe(data => {
-      //alert("data " + data);
+
       console.log(data['_body']);
       var stat = data['_body'];
       stat = JSON.parse(data['_body']);;
@@ -61,16 +60,13 @@ export class SignUp {
         this.navCtrl.push(Login);
 
       }
-      //this.response = data['_body'];
-      //return(this.response);
-      //return Promise.resolve(UrlRequestService);
+
     }, error => {
       alert("error" + error);
       console.log(error);
-      //this.response = error;
-      //return Promise.resolve(this.response);
+
     });
-    //alert("reply " + this.urlRequestService.response);
+
   }
   showAlert() {
     let alert = this.alertCtrl.create({
@@ -81,15 +77,10 @@ export class SignUp {
     alert.present();
   }
   signUp(): void {
-    //alert("" + this.register.userName);
-
-
 
     if ((this.register.password == this.register.confirmPassword) && (this.register.password.length > 7) && (this.register.confirmPassword.length > 7)) {
 
-      // if (){
 
-      // }
 
       this.postRequest();
     }

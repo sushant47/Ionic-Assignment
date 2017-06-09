@@ -30,7 +30,7 @@ export class MyApp {
     console.log(postParams.email);
     console.log(postParams.password);
     this.urlRequestService.postRequest(postParams,url).subscribe(data => {
-        //alert("data " + data);
+        
         console.log(data['_body']);
         var stat = data['_body'];
         stat = JSON.parse(data['_body']);; 
@@ -41,14 +41,11 @@ export class MyApp {
           this.rootPage = CafeOutlets;
 
         }
-        //this.response = data['_body'];
-        //return(this.response);
-        //return Promise.resolve(UrlRequestService);
+       
        }, error => {
          alert("error" + error);
         console.log(error);
-        //this.response = error;
-         //return Promise.resolve(this.response);
+       
       });
 
       }
