@@ -12,6 +12,19 @@ export class UrlRequestService {
     headers.append("Accept", 'application/json');
     headers.append('Content-Type', 'application/json' );
     let options = new RequestOptions({ headers: headers });
+    postParams = JSON.stringify(postParams);
+ 
+
+    return this.http.post(url,postParams, options);
+                        
+  }
+
+
+post(postParams, url:string){
+    var headers = new Headers();
+    headers.append("Accept", 'application/json');
+    headers.append('Content-Type', 'application/json' );
+    let options = new RequestOptions({ headers: headers });
  
     // let postParams = {
     //   username: 'sushant',
@@ -20,7 +33,11 @@ export class UrlRequestService {
     // }
     //alert(url);
 
-    return this.http.post(url,postParams, options);
+    return this.http.post(url,postParams, options).map((res: Response) => {
+            if (res) {
+                return { status: res.status, json: res.json() }
+            }
+        });
                         
 
     // this.http.post(url, postParams, options)
@@ -38,6 +55,7 @@ export class UrlRequestService {
     //   });
     //   return Promise.resolve(this.response);
   }
+
 //     getHeroes(): Promise<Hero[]> {
 //     return this.http.get(this.heroesUrl)
 //                .toPromise()

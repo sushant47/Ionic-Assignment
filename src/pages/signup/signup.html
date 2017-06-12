@@ -15,28 +15,28 @@
 
                     <ion-item class="signup-input">
                         <ion-label floating>Username</ion-label>
-                        <ion-input type="text" [(ngModel)]="register.userName"></ion-input>
+                        <ion-input type="text" [(ngModel)]="userInputData.userName"></ion-input>
                     </ion-item>
 
                     <ion-item class="signup-input">
                         <ion-label floating>Email Id</ion-label>
-                        <ion-input type="email" [(ngModel)]="register.emailId" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></ion-input>
+                        <ion-input type="email" [(ngModel)]="userInputData.emailId" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></ion-input>
                     </ion-item>
 
                     <ion-item class="signup-input">
                         <ion-label floating>Password</ion-label>
-                        <ion-input type="password" [(ngModel)]="register.password"></ion-input>
+                        <ion-input type="password" [(ngModel)]="userInputData.password"></ion-input>
                     </ion-item>
 
                     <ion-item class="signup-input">
                         <ion-label floating>Confirm Password</ion-label>
-                        <ion-input type="password" [(ngModel)]="register.confirmPassword"></ion-input>
+                        <ion-input type="password" [(ngModel)]="userInputData.confirmPassword"></ion-input>
                     </ion-item>
 
                 </ion-list>
             </ion-col>
         </ion-row>
-<button class="signup-button" [disabled]="!register.userName || !register.emailId || !register.password || !register.confirmPassword" (click) = "signUp()" ion-button block color="dark" outline >SignUp</button>
+<button class="signup-button" [disabled]="!userInputData.userName || !userInputData.emailId || !userInputData.password || !userInputData.confirmPassword" (click) = "signUp()" ion-button block color="dark" outline >SignUp</button>
     </div>
 
 

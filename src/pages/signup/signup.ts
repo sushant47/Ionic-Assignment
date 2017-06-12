@@ -1,39 +1,56 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Login } from '../login/login';
-import { UrlRequestService } from '../services/url-request.service';
+import { SignupService } from '../services/signup.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { AlertController } from 'ionic-angular';
+import { UserInputData } from '../userinputdata/UserInputData';
+import {URL} from '../constants/constants';
+
 let Title: string;
 let Msg: string;
 let btn: string;
 
+
+
 @Component({
   selector: 'page-signup',
   templateUrl: 'signup.html',
-  providers: [UrlRequestService]
+  providers: [SignupService]
 })
 
-export class SignUp {
+export class SignUp{
 
-  register: {
-    userName: string,
-    emailId: string,
-    password: string,
-    confirmPassword: string
-  }
+  userInputData: UserInputData = {};
+   
+  // register: {
+  //   userName: string,
+  //   emailId: string,
+  //   password: string,
+  //   confirmPassword: string
+  // }
 
 
-  constructor(public navCtrl: NavController, public http: Http, private urlRequestService: UrlRequestService, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public http: Http, private signUpService: SignupService, public alertCtrl: AlertController) {
 
-    this.register = {
-      userName: '',
-      emailId: '',
-      password: '',
-      confirmPassword: ''
+ 
 
-    }
+//userInputData = { userName: '', emailId: '', password:'', confirmPassword:'' };
+// userInputData.userName='';
+// userInputData.emailId='';
+// userInputData.password='';
+// userInputData.confirmPassword='';
+
+    // this.register = {
+    //   userName: '',
+    //   emailId: '',
+    //   password: '',
+    //   confirmPassword: ''
+
+    // }
+
+    
 
   }
 
@@ -41,21 +58,23 @@ export class SignUp {
   postRequest() {
 
     let postParams = {
-      username: this.register.userName,
-      email: this.register.emailId,
-      password: this.register.password
+      username: this.userInputData.userName,
+      email: this.userInputData.emailId,
+      password: this.userInputData.password
     }
 
-    let url: string = 'https://extcafe.herokuapp.com/api/register';
     console.log(postParams.username);
     console.log(postParams.email);
-    this.urlRequestService.postRequest(postParams, url).subscribe(data => {
+    this.signUpService.post(postParams, URL.USER_REGISTERATION_URL).subscribe(data => {
 
-      console.log(data['_body']);
-      var stat = data['_body'];
-      stat = JSON.parse(data['_body']);;
-      console.log(stat.status);
-      if (stat.status == "SUCCESS") {
+      // console.log(data['_body']);
+      // var stat = data['_body'];
+      // stat = JSON.parse(data['_body']);;
+      // console.log(stat.status);
+
+      console.log(data.json);
+
+      if (data.json.status == "SUCCESS") {
 
         this.navCtrl.push(Login);
 
@@ -78,14 +97,14 @@ export class SignUp {
   }
   signUp(): void {
 
-    if ((this.register.password == this.register.confirmPassword) && (this.register.password.length > 7) && (this.register.confirmPassword.length > 7)) {
+    if ((this.userInputData.password == this.userInputData.confirmPassword) && (this.userInputData.password.length > 7) && (this.userInputData.confirmPassword.length > 7)) {
 
 
 
       this.postRequest();
     }
 
-    else if (this.register.password != this.register.confirmPassword) {
+    else if (this.userInputData.password != this.userInputData.confirmPassword) {
 
       Title = "Password Missmatch Error";
       Msg = "Password and Confirm password not matching!";
@@ -93,7 +112,7 @@ export class SignUp {
       this.showAlert();
     }
 
-    else if (this.register.password.length < 7) {
+    else if (this.userInputData.password.length < 7) {
 
       Title = "Password Length error";
       Msg = "Password should be minimum 8 characters!";

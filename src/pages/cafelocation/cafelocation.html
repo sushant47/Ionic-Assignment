@@ -10,6 +10,10 @@
 </ion-header>
  
 <ion-content>
+  <p class = “label”>From</p>
+<input id='journey_from' name='journey_from' type='text' placeholder='Enter location' [(ngModel)]='fromValue'>
+<p class = “label”>To</p>
+<input id='journey_to' name='journey_to' type='text' placeholder='Enter location' [(ngModel)]='toValue'>
   <div #map id="map"></div>  
   <ion-fab bottom left>
         <button ion-fab mini><ion-icon name="add"></ion-icon></button>

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { UrlRequestService } from '../pages/services/url-request.service';
+import { LoginService } from '../pages/services/login.service';
 import { HomePage } from '../pages/home/home';
 import { SignUp } from '../pages/signup/signup';
 import { Login } from '../pages/login/login';
@@ -10,12 +10,12 @@ import { CafeOutlets } from '../pages/cafeoutlets/cafeoutlets';
 import { TabsPage } from '../pages/tabs/tabs';
 @Component({
   templateUrl: 'app.html',
-  providers: [UrlRequestService]
+  providers: [LoginService]
 })
 export class MyApp {
   rootPage: any;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private urlRequestService: UrlRequestService) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private loginService: LoginService) {
     platform.ready().then(() => {
       if ("userid" in localStorage && "password" in localStorage) {
 
@@ -30,7 +30,7 @@ export class MyApp {
         let url: string = 'https://extcafe.herokuapp.com/api/login';
         console.log(postParams.email);
         console.log(postParams.password);
-        this.urlRequestService.postRequest(postParams, url).subscribe(data => {
+        this.loginService.postRequest(postParams, url).subscribe(data => {
 
           console.log(data['_body']);
           var stat = data['_body'];

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { UrlRequestService } from '../services/url-request.service';
+import { CafeService } from '../services/cafe.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { AlertController } from 'ionic-angular';
@@ -8,6 +8,7 @@ import { Login } from '../login/login';
 import { ModalController, NavParams } from 'ionic-angular';
 import { ModalPage } from '../modal/modalpage';
 import { ToastController } from 'ionic-angular';
+import {URL} from '../constants/constants';
 
 let Title: string;
 let Msg: string;
@@ -18,22 +19,22 @@ let user_id: string;
 @Component({
     selector: 'page-cafeoutlets',
     templateUrl: 'cafeoutlets.html',
-    providers: [UrlRequestService]
+    providers: [CafeService]
 })
 
 export class CafeOutlets {
 
     public items: any;
 
-    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public http: Http, private urlRequestService: UrlRequestService, public alertCtrl: AlertController, public modalCtrl: ModalController) {
+    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public http: Http, private cafeService: CafeService, public alertCtrl: AlertController, public modalCtrl: ModalController) {
         this.postRequest();
     }
 
 
-ionSelected() {
-   // alert("Home Page has been selected");
-    
-  }
+    ionSelected() {
+        // alert("Home Page has been selected");
+
+    }
     presentToast() {
         let toast = this.toastCtrl.create({
             message: 'Extentia Cafe Outlet Added Successfully',
@@ -50,16 +51,16 @@ ionSelected() {
         modal.present();
 
         modal.onDidDismiss(data => {
-            if(data=="success"){
-            that.presentToast();
-            that.postRequest();   
-        }
-        else{
-            console.log(data);
-        }
-          
-           
-         });
+            if (data == "success") {
+                that.presentToast();
+                that.postRequest();
+            }
+            else {
+                console.log(data);
+            }
+
+
+        });
 
     }
 
@@ -74,21 +75,19 @@ ionSelected() {
 
             user_id = localStorage.getItem("userid");
             console.log("reached");
-            let url: string = 'https://extcafe.herokuapp.com/api/getCafeList';
+            
+            this.cafeService.getAllCafeList(postParams, URL.GET_CAFELIST_URL).subscribe(data => {
 
-            this.urlRequestService.postRequest(postParams, url).subscribe(data => {
+                console.log(data);
 
-                console.log(data['_body']);
-                var stat = data['_body'];
-                stat = JSON.parse(data['_body']);;
-                console.log(stat.status);
-                console.log(stat.cafeList[0]);
-                console.log(stat.cafeList);
-
-                if (stat.status == "SUCCESS") {
+                console.log(data.json);
+                console.log(data.json.cafeList);
 
 
-                    this.items = stat.cafeList;
+                if (data.json.status == "SUCCESS") {
+
+
+                    this.items = data.json.cafeList;
 
                 }
 

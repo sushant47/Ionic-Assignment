@@ -14,6 +14,7 @@ import { ModalPage } from '../pages/modal/modalpage';
 import { TabsPage } from '../pages/tabs/tabs';
 import { CafeLocation } from '../pages/cafelocation/cafelocation';
 import { Geolocation } from '@ionic-native/geolocation';
+import { UrlRequestService } from '../pages/services/url-request.service';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { Geolocation } from '@ionic-native/geolocation';
     StatusBar,
     SplashScreen,
     Geolocation,
+    UrlRequestService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
