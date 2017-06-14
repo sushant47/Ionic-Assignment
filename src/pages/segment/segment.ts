@@ -1,10 +1,11 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ModalController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, Platform, NavParams, AlertController, ModalController, ToastController } from 'ionic-angular';
 import { CafeService } from '../services/cafe.service';
 import { URL } from '../constants/constants';
 import { Login } from '../login/login';
 import { ModalPage } from '../modal/modalpage';
 import { Geolocation } from '@ionic-native/geolocation';
+import { GoogleMap, GoogleMapsEvent, LatLng } from '@ionic-native/google-maps';
 
 declare var google;
 
@@ -20,6 +21,8 @@ let user_id: string;
   providers: [CafeService]
 })
 export class SegmentPage implements OnInit {
+  myLong: number;
+  myLat: number;
 
   //@ViewChild('map') mapElement: ElementRef;
   map: any;
@@ -140,24 +143,63 @@ export class SegmentPage implements OnInit {
 
   loadMap() {
 
-    this.geolocation.getCurrentPosition().then((position) => {
+this.geolocation.getCurrentPosition().then((resp) => {
 
-      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      console.log("inside map");
-      let mapOptions = {
-        center: latLng,
-        zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      }
+//this.loading();
+   this.myLat = resp.coords.latitude;
+   this.myLong = resp.coords.longitude;
+   let location = new LatLng(this.myLat,this.myLong);
+ 
+        this.map = new GoogleMap('map', {
+          'backgroundColor': 'white',
+          'controls': {
+            'compass': true,
+            'myLocationButton': true,
+            'indoorPicker': true,
+            'zoom': true
+          },
+          'gestures': {
+            'scroll': true,
+            'tilt': true,
+            'rotate': true,
+            'zoom': true
+          },
+          'camera': {
+            'latLng': location,
+            'tilt': 30,
+            'zoom': 15,
+            'bearing': 50
+          }
+        });
+ 
+        this.map.on(GoogleMapsEvent.MAP_READY).subscribe(() => {
+            console.log('Map is ready!');
+        });
 
-      //console.log("mapelement " + this.mapElement);
-      this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
-      //this.map.setCenter(latLng);
-      //this.loading();
+  }).catch((error) => {
+    console.log('Error getting location', error);
+  });
 
-    }, (err) => {
-      console.log(err);
-    });
+
+
+    // this.geolocation.getCurrentPosition().then((position) => {
+
+    //   let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    //   console.log("inside map");
+    //   let mapOptions = {
+    //     center: latLng,
+    //     zoom: 15,
+    //     mapTypeId: google.maps.MapTypeId.ROADMAP
+    //   }
+
+    //   //console.log("mapelement " + this.mapElement);
+    //   this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    //   //this.map.setCenter(latLng);
+    //   //this.loading();
+
+    // }, (err) => {
+    //   console.log(err);
+    // });
 
   }
 
@@ -217,7 +259,7 @@ loading(){
 
     // add the first listener
     google.maps.event.addListener(autocomplete1, 'place_changed', function () {
-
+      
       let place = autocomplete1.getPlace();
       let geometry = place.geometry;
       if ((geometry) !== undefined) {

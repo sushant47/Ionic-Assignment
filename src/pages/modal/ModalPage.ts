@@ -16,22 +16,12 @@ declare var google;
 
 export class ModalPage implements OnInit {
 
-    // cafeDetails: {
-    //     cafeName: string,
-    //     location: string,
-    //     description: string
-    // }
+    
 
     userInputData: UserInputData = {};
 
     constructor(private viewCtrl: ViewController, public http: Http, private cafeService: CafeService) {
-        // this.cafeDetails = {
-        //     cafeName: '',
-        //     location: '',
-        //     description: ''
-        // }
-
-        //this.loading();
+       
     }
 
 
@@ -39,10 +29,12 @@ export class ModalPage implements OnInit {
     dismiss(data) {
         console.log("data " + data);
         this.viewCtrl.dismiss(data);
+        google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
     }
 
     addCafe(): void {
 
+         google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
         let postParams = {
             name: this.userInputData.cafeName,
             location: this.userInputData.location,
@@ -124,6 +116,7 @@ ngOnInit(): void {
 
    ngAfterViewInit(): void {
 
+//alert("loaded");
  //get the two fields
     let input_from = document.getElementById('journey_from').getElementsByTagName('input')[0];
     //let input_to = (<HTMLInputElement>document.getElementById('journey_to'));

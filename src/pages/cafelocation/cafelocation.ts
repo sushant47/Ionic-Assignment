@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef,OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { UrlRequestService } from '../services/url-request.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { AlertController } from 'ionic-angular';
@@ -22,8 +21,7 @@ let user_id: string;
 
 @Component({
   selector: 'page-cafelocation',
-  templateUrl: 'cafelocation.html',
-  providers: [UrlRequestService]
+  templateUrl: 'cafelocation.html'
 })
 
 export class CafeLocation implements OnInit {

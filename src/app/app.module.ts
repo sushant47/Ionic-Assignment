@@ -14,7 +14,7 @@ import { ModalPage } from '../pages/modal/modalpage';
 import { TabsPage } from '../pages/tabs/tabs';
 import { CafeLocation } from '../pages/cafelocation/cafelocation';
 import { Geolocation } from '@ionic-native/geolocation';
-import { UrlRequestService } from '../pages/services/url-request.service';
+import { HttpService } from '../pages/services/http.service';
 import {SegmentPage} from '../pages/segment/segment';
 
 @NgModule({
@@ -50,7 +50,7 @@ import {SegmentPage} from '../pages/segment/segment';
     StatusBar,
     SplashScreen,
     Geolocation,
-    UrlRequestService,
+    HttpService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

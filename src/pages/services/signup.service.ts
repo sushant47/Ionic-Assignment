@@ -3,16 +3,16 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/catch';
-import {UrlRequestService} from './url-request.service';
+import {HttpService} from './http.service';
 
 @Component({
-   providers: [UrlRequestService]
+   providers: [HttpService]
 })
 @Injectable()
 export class SignupService {
 
     public  response: any;
-    constructor(private http: Http, private urlRequestService: UrlRequestService) { }
+    constructor(private http: Http, private httpService: HttpService) { }
      postRequest(postParams, url:string){
     var headers = new Headers();
     headers.append("Accept", 'application/json');
@@ -65,7 +65,7 @@ post(postParams, url:string){
     
     console.log(postParams.email);
     console.log(postParams.password);
-   return this.urlRequestService.post(postParams, url).map(data => {
+   return this.httpService.post(postParams, url).map(data => {
       //alert("data " + data);
       // console.log(data['_body']);
       // var stat = data['_body'];

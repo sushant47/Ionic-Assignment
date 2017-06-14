@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/catch';
 @Injectable()
-export class UrlRequestService {
+export class HttpService {
     public  response: any;
     constructor(private http: Http) { }
      postRequest(postParams, url:string){
