@@ -4,5 +4,8 @@ export interface UserInputData {
     emailId?: string;
     password?: string;
     confirmPassword?: string;
+    cafeName?: string;
+    location?: string;
+    description?: string;
     
 }

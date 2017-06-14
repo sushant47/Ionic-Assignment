@@ -24,38 +24,14 @@ export class SignUp{
 
   userInputData: UserInputData = {};
    
-  // register: {
-  //   userName: string,
-  //   emailId: string,
-  //   password: string,
-  //   confirmPassword: string
-  // }
-
-
-  constructor(public navCtrl: NavController, public http: Http, private signUpService: SignupService, public alertCtrl: AlertController) {
-
  
-
-//userInputData = { userName: '', emailId: '', password:'', confirmPassword:'' };
-// userInputData.userName='';
-// userInputData.emailId='';
-// userInputData.password='';
-// userInputData.confirmPassword='';
-
-    // this.register = {
-    //   userName: '',
-    //   emailId: '',
-    //   password: '',
-    //   confirmPassword: ''
-
-    // }
-
-    
+  constructor(public navCtrl: NavController, public http: Http, private signUpService: SignupService, public alertCtrl: AlertController) {
+ 
 
   }
 
 
-  postRequest() {
+  registerUser() {
 
     let postParams = {
       username: this.userInputData.userName,
@@ -101,7 +77,7 @@ export class SignUp{
 
 
 
-      this.postRequest();
+      this.registerUser();
     }
 
     else if (this.userInputData.password != this.userInputData.confirmPassword) {

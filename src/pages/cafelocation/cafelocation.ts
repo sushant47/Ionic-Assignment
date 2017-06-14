@@ -19,6 +19,7 @@ let btn: string;
 let user_id: string;
 
 
+
 @Component({
   selector: 'page-cafelocation',
   templateUrl: 'cafelocation.html',
@@ -28,7 +29,8 @@ let user_id: string;
 export class CafeLocation implements OnInit {
 
 
-  @ViewChild('map') mapElement: ElementRef;
+  //@ViewChild('map') mapElement: ElementRef;
+  id: any;
   map: any;
   fromValue: string;
   toValue: string;
@@ -48,9 +50,11 @@ export class CafeLocation implements OnInit {
 
   }
   loadMap() {
+    //@ViewChild('map') mapElement: ElementRef;
 
     this.geolocation.getCurrentPosition().then((position) => {
 
+     // let id = document.getElementById("id");
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       console.log("inside map");
       let mapOptions = {
@@ -59,7 +63,7 @@ export class CafeLocation implements OnInit {
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
 
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      this.map = new google.maps.Map(this.id.nativeElement.value, mapOptions);
 
     }, (err) => {
       console.log(err);
@@ -95,6 +99,7 @@ export class CafeLocation implements OnInit {
 
   ngOnInit(): void {
     // get the two fields
+let id = document.getElementById("id");
 let input_from = (<HTMLInputElement>document.getElementById('journey_from'));
 let input_to = (<HTMLInputElement>document.getElementById('journey_to'));
 

@@ -5,7 +5,7 @@ import { SignUp } from '../signup/signup';
 import { CafeOutlets } from '../cafeoutlets/cafeoutlets';
 import { TabsPage } from '../tabs/tabs';
 import { UserInputData } from '../userinputdata/UserInputData';
-import {URL} from '../constants/constants';
+import { URL } from '../constants/constants';
 
 @Component({
   selector: 'page-login',
@@ -15,18 +15,9 @@ import {URL} from '../constants/constants';
 
 export class Login {
 
-userLoginData: UserInputData = {};
-  // userLogin: {
-  //   emailId: string,
-  //   password: string
-  // }
-  // userLogin: UserLogin = new UserLogin();
-  constructor(public navCtrl: NavController, private loginService: LoginService) {
+  userLoginData: UserInputData = {};
 
-    // this.userLogin = {
-    //   emailId: '',
-    //   password: ''
-    // }
+  constructor(public navCtrl: NavController, private loginService: LoginService) {
 
   }
 
@@ -40,7 +31,7 @@ userLoginData: UserInputData = {};
 
 
 
-    
+
     console.log(URL);
     console.log(postParams.email);
     console.log(postParams.password);
@@ -60,16 +51,13 @@ userLoginData: UserInputData = {};
         this.navCtrl.push(TabsPage);
 
       }
-      //this.response = data['_body'];
-      //return(this.response);
-      //return Promise.resolve(UrlRequestService);
+
     }, error => {
       alert("error" + error);
       console.log(error);
-      //this.response = error;
-      //return Promise.resolve(this.response);
+
     });
-    //alert("reply " + this.urlRequestService.response);
+
 
   }
 

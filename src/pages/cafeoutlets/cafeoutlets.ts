@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { CafeService } from '../services/cafe.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
@@ -22,12 +22,13 @@ let user_id: string;
     providers: [CafeService]
 })
 
-export class CafeOutlets {
+export class CafeOutlets implements OnInit {
+    
 
-    public items: any;
+    public items: any = [];
 
     constructor(public navCtrl: NavController, public toastCtrl: ToastController, public http: Http, private cafeService: CafeService, public alertCtrl: AlertController, public modalCtrl: ModalController) {
-        this.postRequest();
+        
     }
 
 
@@ -53,7 +54,7 @@ export class CafeOutlets {
         modal.onDidDismiss(data => {
             if (data == "success") {
                 that.presentToast();
-                that.postRequest();
+                that.getAllCafeList();
             }
             else {
                 console.log(data);
@@ -64,7 +65,7 @@ export class CafeOutlets {
 
     }
 
-    postRequest() {
+    getAllCafeList() {
 
         console.log(localStorage.getItem("userid"));
         let postParams = {
@@ -125,5 +126,8 @@ export class CafeOutlets {
 
     }
 
+ngOnInit(): void {
+       this.getAllCafeList();
+    }
 
 }

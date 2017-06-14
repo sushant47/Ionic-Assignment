@@ -15,6 +15,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { CafeLocation } from '../pages/cafelocation/cafelocation';
 import { Geolocation } from '@ionic-native/geolocation';
 import { UrlRequestService } from '../pages/services/url-request.service';
+import {SegmentPage} from '../pages/segment/segment';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { UrlRequestService } from '../pages/services/url-request.service';
     CafeOutlets,
     ModalPage,
     TabsPage,
-    CafeLocation
+    CafeLocation,
+    SegmentPage
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import { UrlRequestService } from '../pages/services/url-request.service';
     CafeOutlets,
     ModalPage,
     TabsPage,
-    CafeLocation
+    CafeLocation,
+    SegmentPage
   ],
   providers: [
     StatusBar,

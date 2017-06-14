@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { CafeService } from '../services/cafe.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import {URL} from '../constants/constants';
+import { UserInputData } from '../userinputdata/UserInputData';
+
+declare var google;
 
 @Component({
     selector: 'page-modalpage',
@@ -11,20 +14,24 @@ import {URL} from '../constants/constants';
     providers: [CafeService]
 })
 
-export class ModalPage {
+export class ModalPage implements OnInit {
 
-    cafeDetails: {
-        cafeName: string,
-        location: string,
-        description: string
-    }
+    // cafeDetails: {
+    //     cafeName: string,
+    //     location: string,
+    //     description: string
+    // }
+
+    userInputData: UserInputData = {};
 
     constructor(private viewCtrl: ViewController, public http: Http, private cafeService: CafeService) {
-        this.cafeDetails = {
-            cafeName: '',
-            location: '',
-            description: ''
-        }
+        // this.cafeDetails = {
+        //     cafeName: '',
+        //     location: '',
+        //     description: ''
+        // }
+
+        //this.loading();
     }
 
 
@@ -37,9 +44,9 @@ export class ModalPage {
     addCafe(): void {
 
         let postParams = {
-            name: this.cafeDetails.cafeName,
-            location: this.cafeDetails.location,
-            description: this.cafeDetails.description,
+            name: this.userInputData.cafeName,
+            location: this.userInputData.location,
+            description: this.userInputData.description,
             user_ref_id: localStorage.getItem("userid")
         }
 
@@ -70,8 +77,86 @@ export class ModalPage {
 
     }
 
+loading(){
+   //get the two fields
+    let input_from = (<HTMLInputElement>document.getElementById('journey_from'));
+    console.log(input_from);
+    //let input_to = (<HTMLInputElement>document.getElementById('journey_to'));
+
+    // set the options
+    let options = {
+      types: [],
+      componentRestrictions: { country: "IND" }
+    };
+
+    // create the two autocompletes on the from and to fields
+    let autocomplete1 = new google.maps.places.Autocomplete(input_from, options);
+    //let autocomplete2 = new google.maps.places.Autocomplete(input_to, options);
+
+    // we need to save a reference to this as we lose it in the callbacks
+    let self = this;
+
+    // add the first listener
+    google.maps.event.addListener(autocomplete1, 'place_changed', function () {
+
+      let place = autocomplete1.getPlace();
+      let geometry = place.geometry;
+      if ((geometry) !== undefined) {
+
+        console.log(place.name);
+
+        console.log(geometry.location.lng());
+
+        console.log(geometry.location.lat());
+
+      }
+    });
+}
 
 
+ngOnInit(): void {
+   
+  
+  
 
+
+  }
+
+   ngAfterViewInit(): void {
+
+ //get the two fields
+    let input_from = document.getElementById('journey_from').getElementsByTagName('input')[0];
+    //let input_to = (<HTMLInputElement>document.getElementById('journey_to'));
+
+    // set the options
+    let options = {
+      types: [],
+      componentRestrictions: { country: "IND" }
+    };
+
+    // create the two autocompletes on the from and to fields
+    let autocomplete1 = new google.maps.places.Autocomplete(input_from, options);
+    //let autocomplete2 = new google.maps.places.Autocomplete(input_to, options);
+
+    // we need to save a reference to this as we lose it in the callbacks
+    let self = this;
+
+    // add the first listener
+    google.maps.event.addListener(autocomplete1, 'place_changed', function () {
+
+      let place = autocomplete1.getPlace();
+      let geometry = place.geometry;
+      if ((geometry) !== undefined) {
+
+        console.log(place.name);
+
+        console.log(geometry.location.lng());
+
+        console.log(geometry.location.lat());
+
+      }
+    });
+
+  }
 
 }

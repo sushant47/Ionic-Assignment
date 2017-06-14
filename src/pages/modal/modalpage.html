@@ -11,18 +11,19 @@
 </ion-header>
 <ion-content padding class="sample-modal-page">
   <ion-item>
-  
-  <ion-input type="text" placeholder="Cafe Name" [(ngModel)]="cafeDetails.cafeName"></ion-input>
+  <!--<p class = “label”>From</p>-->
+<!--<input id='journey_from' name='journey_from' type='text' placeholder='Enter location' [(ngModel)]='fromValue'>-->
+  <ion-input type="text" placeholder="Cafe Name" [(ngModel)]="userInputData.cafeName"></ion-input>
 </ion-item>
  <ion-item>
   
-  <ion-input type="text" placeholder="Cafe Location" [(ngModel)]="cafeDetails.location"></ion-input>
+  <ion-input id='journey_from' name='journey_from' type='text' placeholder='Cafe Location' [(ngModel)]="userInputData.location"></ion-input>
 </ion-item>
  <ion-item>
   
-  <ion-input type="text" placeholder="Cafe Description" [(ngModel)]="cafeDetails.description"></ion-input>
+  <ion-input type="text" placeholder="Cafe Description" [(ngModel)]="userInputData.description"></ion-input>
 </ion-item>
-<button class="modal" [disabled]="!cafeDetails.cafeName || !cafeDetails.location || !cafeDetails.description" (click) = "addCafe()" ion-button block color="dark" outline >Add Cafe</button>
+<button class="modal" [disabled]="!userInputData.cafeName || !userInputData.location || !userInputData.description" (click) = "addCafe()" ion-button block color="dark" outline >Add Cafe</button>
 </ion-content>
 
 
