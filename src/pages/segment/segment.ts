@@ -5,7 +5,8 @@ import { URL } from '../constants/constants';
 import { Login } from '../login/login';
 import { ModalPage } from '../modal/modalpage';
 import { Geolocation } from '@ionic-native/geolocation';
-import { GoogleMap, GoogleMapsEvent, LatLng } from '@ionic-native/google-maps';
+import { GoogleMap, GoogleMapsEvent, LatLng, MarkerOptions, Marker, CameraPosition } from '@ionic-native/google-maps';
+import { HttpService } from '../services/http.service';
 
 declare var google;
 
@@ -18,11 +19,14 @@ let user_id: string;
 @Component({
   selector: 'page-segment',
   templateUrl: 'segment.html',
-  providers: [CafeService]
+  providers: [CafeService,HttpService]
 })
 export class SegmentPage implements OnInit {
+  defaultZoom: any;
+  onLocationSelected: any;
   myLong: number;
   myLat: number;
+  address;
 
   //@ViewChild('map') mapElement: ElementRef;
   map: any;
@@ -30,9 +34,14 @@ export class SegmentPage implements OnInit {
   toValue: string;
   public items: any;
   cat: string = "cafelist";
-  constructor(public navCtrl: NavController, public toastCtrl: ToastController, public geolocation: Geolocation, public navParams: NavParams, public cafeService: CafeService, public alertCtrl: AlertController, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public httpService: HttpService, public toastCtrl: ToastController, public geolocation: Geolocation, public navParams: NavParams, public cafeService: CafeService, public alertCtrl: AlertController, public modalCtrl: ModalController) {
     this.fromValue = '';
     this.toValue = '';
+    {
+    this.address = {
+      place: ''
+    };
+  }
   }
 
   presentToast() {
@@ -54,7 +63,46 @@ export class SegmentPage implements OnInit {
         that.presentToast();
         that.postRequest();
       }
-      else {
+      else if(data != undefined) 
+      {
+        // this.address.place = data;
+      let url="https://maps.googleapis.com/maps/api/geocode/json?address="+data+"&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
+   
+    console.log(this.address.place);
+    this.httpService.post("", url).subscribe(data => {
+
+      console.log(data);
+      console.log(data.json);
+      let ionic: LatLng = new LatLng(data.json.results[0].geometry.location.lat,data.json.results[0].geometry.location.lng);
+      console.log(data.json.results[0].geometry.location.lat);
+      console.log(data.json.results[0].geometry.location.lng);
+      let position: CameraPosition = {
+      target: ionic,
+      zoom: 18,
+      tilt: 30
+    };
+    this.map.moveCamera(position);
+      let markerOptions: MarkerOptions = {
+      position: ionic,
+      title: 'Ionic',
+      draggable: true
+    };
+       this.map.addMarker(markerOptions)
+      .then(
+        (marker: Marker) => {
+          console.log("marker");
+          marker.showInfoWindow();
+        }
+      );
+      
+    }, error => {
+      alert("error" + error);
+      console.log(error);
+
+    });
+      }
+
+      else{
         console.log(data);
       }
 
@@ -68,6 +116,18 @@ export class SegmentPage implements OnInit {
     this.loadMap();
   }
 }
+
+private setUpDraggableMarker(marker: Marker) {
+    marker.on(GoogleMapsEvent.MARKER_DRAG_END).subscribe(() => {
+
+      marker.getPosition().then((pos: LatLng) => {
+        console.log(pos);
+        this.onLocationSelected.emit(pos); /* changes as expected */
+        this.map.animateCamera({target: pos, zoom: this.defaultZoom, duration: 8});
+      });
+
+    })
+  }
   ionViewDidLoad() {
      //this.loadMap();
     console.log('ionViewDidLoad SegmentPage');

@@ -1,15 +1,22 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons start>
+    <ion-title>Enter address</ion-title>
+    <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="true"   (ionInput)="updateSearch()" (ionCancel)="dismiss()"></ion-searchbar>
+    <!--<ion-buttons start>
     <button (click)="dismiss()">
       Cancel
     </button>
-  </ion-buttons>
-  <ion-title>Add a Café outlet</ion-title>
+  </ion-buttons>-->
+  
 
   </ion-toolbar>
 </ion-header>
 <ion-content padding class="sample-modal-page">
+  <ion-list>
+    <button ion-item *ngFor="let item of autocompleteItems" (tap)="chooseItem(item)">
+      {{ item }}
+    </button>
+  </ion-list>
   <ion-item>
   <!--<p class = “label”>From</p>-->
 <!--<input id='journey_from' name='journey_from' type='text' placeholder='Enter location' [(ngModel)]='fromValue'>-->
