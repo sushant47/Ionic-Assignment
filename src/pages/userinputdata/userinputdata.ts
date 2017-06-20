@@ -5,7 +5,7 @@ export interface UserInputData {
     password?: string;
     confirmPassword?: string;
     cafeName?: string;
-    location?: string;
+    location?: {name:any,lat:any,lng:any};
     description?: string;
     
 }

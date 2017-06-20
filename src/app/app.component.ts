@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Platform, LoadingController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginService } from '../pages/services/login.service';
@@ -9,7 +9,9 @@ import { Login } from '../pages/login/login';
 import { CafeOutlets } from '../pages/cafeoutlets/cafeoutlets';
 import { TabsPage } from '../pages/tabs/tabs';
 import { SegmentPage } from '../pages/segment/segment';
+import { Keyboard } from '@ionic-native/keyboard';
 
+let loading: any;
 @Component({
   templateUrl: 'app.html',
   providers: [LoginService]
@@ -18,16 +20,22 @@ export class MyApp implements OnInit {
 
   rootPage: any;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private loginService: LoginService) {
+  constructor(keyboard: Keyboard, platform: Platform, public loadingCtrl: LoadingController, statusBar: StatusBar, splashScreen: SplashScreen, private loginService: LoginService) {
     platform.ready().then(() => {
+      
       statusBar.styleDefault();
       splashScreen.hide();
     });
   }
+ 
   ngOnInit(): void {
+    loading = this.loadingCtrl.create({
+    content: 'Please wait...'
+  });
+    loading.present();
 
     if ("userid" in localStorage && "password" in localStorage) {
-
+loading.dismiss();
       this.rootPage = SegmentPage;
       // let postParams = {
       //   email: localStorage.getItem("userid"),
@@ -60,6 +68,7 @@ export class MyApp implements OnInit {
 
     }
     else {
+      loading.dismiss();
       this.rootPage = Login;
     }
 

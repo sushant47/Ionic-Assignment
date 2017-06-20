@@ -3,7 +3,6 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import {SignUp} from '../pages/signup/signup';
@@ -14,6 +13,7 @@ import { ModalPage } from '../pages/modal/modalpage';
 import { TabsPage } from '../pages/tabs/tabs';
 import { CafeLocation } from '../pages/cafelocation/cafelocation';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Keyboard } from '@ionic-native/keyboard';
 import { HttpService } from '../pages/services/http.service';
 import {SegmentPage} from '../pages/segment/segment';
 
@@ -32,7 +32,7 @@ import {SegmentPage} from '../pages/segment/segment';
   imports: [
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp, { scrollAssist: false, autoFocusAssist: false })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -50,6 +50,7 @@ import {SegmentPage} from '../pages/segment/segment';
     StatusBar,
     SplashScreen,
     Geolocation,
+    Keyboard,
     HttpService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

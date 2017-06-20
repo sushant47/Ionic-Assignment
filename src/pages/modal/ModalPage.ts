@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { CafeService } from '../services/cafe.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
@@ -12,18 +12,30 @@ declare var google;
 @Component({
   selector: 'page-modalpage',
   templateUrl: 'modalpage.html',
-  providers: [CafeService,HttpService]
+  providers: [CafeService, HttpService]
 })
 
-export class ModalPage implements OnInit {
+export class ModalPage{
 
 
   autocompleteItems;
   autocomplete;
   userInputData: UserInputData = {};
+  coordinates:any;
+  constructor(public params: NavParams, private viewCtrl: ViewController, public http: Http, private cafeService: CafeService, private zone: NgZone, public httpService: HttpService) {
 
-  constructor(private viewCtrl: ViewController, public http: Http, private cafeService: CafeService, private zone: NgZone, public httpService: HttpService) {
+    console.log(this.params.get('mapAddress'));
+    this.coordinates = this.params.get('mapAddress');
+    // if (this.coordinates != undefined) {
+    //   console.log("location coordinates " + coordinates.lat);
+    //   this.userInputData.location = {
+    //     name: '',
+    //     lat: coordinates.lat,
+    //     lng: coordinates.lng
+    //   };
 
+    //   console.log("location coordinates set " + this.userInputData.location);
+    // }
     this.autocompleteItems = [];
     this.autocomplete = {
       query: ''
@@ -41,7 +53,17 @@ export class ModalPage implements OnInit {
 
   addCafe(): void {
 
-   // google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
+    if (this.coordinates != undefined) {
+      console.log("location coordinates " + this.coordinates.lat);
+      this.userInputData.location = {
+        name: this.userInputData.cafeName,
+        lat: this.coordinates.lat,
+        lng: this.coordinates.lng
+      };
+
+      console.log("location coordinates set " + this.userInputData.location);
+    }
+    // google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
     let postParams = {
       name: this.userInputData.cafeName,
       location: this.userInputData.location,
@@ -111,13 +133,14 @@ export class ModalPage implements OnInit {
       }
     });
   }
-chooseItem(item: any) {
-    
+  chooseItem(item: any) {
+
     console.log("item " + item);
+    this.userInputData.location = item;
     this.viewCtrl.dismiss(item);
   }
 
-updateSearch() {
+  updateSearch() {
     if (this.autocomplete.query == '') {
       this.autocompleteItems = [];
       return;
@@ -126,8 +149,8 @@ updateSearch() {
     console.log("query " + this.autocomplete.query);
     this.autocompleteItems = [];
     //let predictions: any = [];
-    let url: string = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="+this.autocomplete.query+"&types=establishment&components=country:ind&location=18.5204,73.8567&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
-this.httpService.post("", url).subscribe(data => {
+    let url: string = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + this.autocomplete.query + "&types=establishment&components=country:ind&location=18.5204,73.8567&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
+    this.httpService.post("", url).subscribe(data => {
       //alert("data " + data);
       // console.log(data['_body']);
       // var stat = data['_body'];
@@ -135,16 +158,16 @@ this.httpService.post("", url).subscribe(data => {
       console.log(data);
       console.log(data.json);
       console.log(data.json.predictions[0].description);
-      
-       me.zone.run(function () {
-          data.json.predictions.forEach(function (prediction) {
-            me.autocompleteItems.push(prediction.description);
-          });
-       });
+
+      me.zone.run(function () {
+        data.json.predictions.forEach(function (prediction) {
+          me.autocompleteItems.push(prediction.description);
+        });
+      });
 
       if (data.json.status == "SUCCESS") {
 
-       console.log("success");
+        console.log("success");
 
       }
 
@@ -168,45 +191,6 @@ this.httpService.post("", url).subscribe(data => {
     // });
   }
 
-  ngOnInit(): void {
-
-
-
-
-
-  }
-
-  ngAfterViewInit(): void {
-
-
-    // let input_from = document.getElementById('journey_from').getElementsByTagName('input')[0];
-
-    // let options = {
-    //   types: [],
-    //   componentRestrictions: { country: "IND" }
-    // };
-
-
-    // let autocomplete1 = new google.maps.places.Autocomplete(input_from, options);
-
-    // let self = this;
-
-
-    // google.maps.event.addListener(autocomplete1, 'place_changed', function () {
-
-    //   let place = autocomplete1.getPlace();
-    //   let geometry = place.geometry;
-    //   if ((geometry) !== undefined) {
-
-    //     console.log(place.name);
-
-    //     console.log(geometry.location.lng());
-
-    //     console.log(geometry.location.lat());
-
-    //   }
-    // });
-
-  }
+ 
 
 }

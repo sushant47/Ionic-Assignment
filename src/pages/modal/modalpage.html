@@ -1,44 +1,37 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Enter address</ion-title>
-    <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="true"   (ionInput)="updateSearch()" (ionCancel)="dismiss()"></ion-searchbar>
-    <!--<ion-buttons start>
-    <button (click)="dismiss()">
-      Cancel
-    </button>
-  </ion-buttons>-->
-  
-
+    <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="true" (ionInput)="updateSearch()" (ionCancel)="dismiss()"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
-<ion-content padding class="sample-modal-page">
+<ion-content padding>
   <ion-list>
-    <button ion-item *ngFor="let item of autocompleteItems" (tap)="chooseItem(item)">
+    <ion-item *ngFor="let item of autocompleteItems" (tap)="chooseItem(item)">
       {{ item }}
-    </button>
+    </ion-item>
   </ion-list>
+<!--<ion-row>
+    <ion-col col-3>
+        <ion-item>
+            <ion-label>Address</ion-label>
+
+        </ion-item>
+    </ion-col>
+
+    <ion-col>
+        <ion-item>
+            <ion-input type="text" id="autocomplete"></ion-input>
+        </ion-item>
+    </ion-col>
+</ion-row>-->
   <ion-item>
-  <!--<p class = “label”>From</p>-->
-<!--<input id='journey_from' name='journey_from' type='text' placeholder='Enter location' [(ngModel)]='fromValue'>-->
-  <ion-input type="text" placeholder="Cafe Name" [(ngModel)]="userInputData.cafeName"></ion-input>
-</ion-item>
- <ion-item>
-  
-  <ion-input id='journey_from' name='journey_from' type='text' placeholder='Cafe Location' [(ngModel)]="userInputData.location"></ion-input>
-</ion-item>
- <ion-item>
-  
-  <ion-input type="text" placeholder="Cafe Description" [(ngModel)]="userInputData.description"></ion-input>
-</ion-item>
-<button class="modal" [disabled]="!userInputData.cafeName || !userInputData.location || !userInputData.description" (click) = "addCafe()" ion-button block color="dark" outline >Add Cafe</button>
+    <ion-input type="text" placeholder="Cafe Name" [(ngModel)]="userInputData.cafeName"></ion-input>
+  </ion-item>
+
+  <ion-item style="margin-top:40px">
+    <ion-input type="text" placeholder="Cafe Description" [(ngModel)]="userInputData.description"></ion-input>
+  </ion-item>
+
+  <button class="modal" style="margin-top:20px" [disabled]="!userInputData.cafeName || !userInputData.location || !userInputData.description" (click)="addCafe()"
+    ion-button block color="dark" outline>Add Cafe</button>
 </ion-content>
-
-
-<!--<ion-toolbar primary>
-  <ion-buttons start>
-    <button (click)="dismiss()">
-      Cancel
-    </button>
-  </ion-buttons>
-  <ion-title>Add a Café outlet</ion-title>
-</ion-toolbar>-->
