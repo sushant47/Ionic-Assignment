@@ -2,6 +2,7 @@ import { Component, NgZone } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { CafeService } from '../services/cafe.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { SegmentPage } from '../segment/segment';
 import 'rxjs/add/operator/map';
 import { URL } from '../constants/constants';
 import { UserInputData } from '../userinputdata/UserInputData';
@@ -12,12 +13,12 @@ import { Geolocation } from '@ionic-native/geolocation';
 declare var google;
 
 @Component({
-  selector: 'page-modalpage',
-  templateUrl: 'modalpage.html',
+  selector: 'page-addcafe',
+  templateUrl: 'addcafe.html',
   providers: [CafeService, HttpService]
 })
 
-export class ModalPage{
+export class AddCafe{
 
   myLong: number;
   myLat: number;
@@ -26,10 +27,10 @@ export class ModalPage{
   autocomplete;
   userInputData: UserInputData = {};
   coordinates:any;
-  constructor(public params: NavParams, private viewCtrl: ViewController, public geolocation: Geolocation, public http: Http, private cafeService: CafeService, private zone: NgZone, public httpService: HttpService) {
+  constructor(public geolocation: Geolocation, private cafeService: CafeService, private zone: NgZone, private viewCtrl: ViewController, public httpService: HttpService) {
    // this.loadMap();
-    console.log(this.params.get('mapAddress'));
-    this.coordinates = this.params.get('mapAddress');
+    //console.log(this.params.get('mapAddress'));
+    //this.coordinates = this.params.get('mapAddress');
     // if (this.coordinates != undefined) {
     //   console.log("location coordinates " + coordinates.lat);
     //   this.userInputData.location = {
@@ -92,12 +93,6 @@ alert("map");
 
   }
 
-  dismiss(data) {
-    console.log("data " + data);
-    this.viewCtrl.dismiss(data);
-    //google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
-  }
-
   addCafe(): void {
 
     if (this.coordinates != undefined) {
@@ -144,7 +139,11 @@ alert("map");
 
 
   }
-
+dismiss(data) {
+    console.log("data " + data);
+    this.viewCtrl.dismiss(data);
+    //google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
+  }
   loading() {
     //get the two fields
     let input_from = (<HTMLInputElement>document.getElementById('journey_from'));

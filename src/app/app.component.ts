@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform, LoadingController } from 'ionic-angular';
+import { Platform, LoadingController, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginService } from '../pages/services/login.service';
@@ -12,6 +12,8 @@ import { SegmentPage } from '../pages/segment/segment';
 import { Keyboard } from '@ionic-native/keyboard';
 
 let loading: any;
+let lastTimeBackPress = 0;
+let timePeriodToExit = 2000;
 @Component({
   templateUrl: 'app.html',
   providers: [LoginService]
@@ -20,52 +22,41 @@ export class MyApp implements OnInit {
 
   rootPage: any;
 
-  constructor(keyboard: Keyboard, platform: Platform, public loadingCtrl: LoadingController, statusBar: StatusBar, splashScreen: SplashScreen, private loginService: LoginService) {
+  constructor(private keyboard: Keyboard, private platform: Platform, public toastCtrl: ToastController, public loadingCtrl: LoadingController, statusBar: StatusBar, splashScreen: SplashScreen, private loginService: LoginService) {
     platform.ready().then(() => {
-      
+
+
+      platform.registerBackButtonAction(() => this.myHandlerFunction());
       statusBar.styleDefault();
       splashScreen.hide();
     });
   }
- 
+
+  myHandlerFunction() {
+    if (new Date().getTime() - lastTimeBackPress < timePeriodToExit) {
+      this.platform.exitApp();
+    }
+    else {
+      let toast = this.toastCtrl.create({
+        message: "Press Again to Confirm Exit",
+        duration: 3000
+      });
+      toast.present();
+      lastTimeBackPress = new Date().getTime();
+    }
+
+  }
+
   ngOnInit(): void {
     loading = this.loadingCtrl.create({
-    content: 'Please wait...'
-  });
+      content: 'Please wait...'
+    });
     loading.present();
 
     if ("userid" in localStorage && "password" in localStorage) {
-loading.dismiss();
+      loading.dismiss();
       this.rootPage = SegmentPage;
-      // let postParams = {
-      //   email: localStorage.getItem("userid"),
-      //   password: localStorage.getItem("password")
-      // }
-
-
-
-      // let url: string = 'https://extcafe.herokuapp.com/api/login';
-      // console.log(postParams.email);
-      // console.log(postParams.password);
-      // this.loginService.postRequest(postParams, url).subscribe(data => {
-
-      //   console.log(data['_body']);
-      //   var stat = data['_body'];
-      //   stat = JSON.parse(data['_body']);;
-      //   console.log(stat.status);
-      //   if (stat.status == "SUCCESS") {
-
-
-      //     this.rootPage = TabsPage;
-
-      //   }
-
-      // }, error => {
-      //   alert("error" + error);
-      //   console.log(error);
-
-      // });
-
+      
     }
     else {
       loading.dismiss();

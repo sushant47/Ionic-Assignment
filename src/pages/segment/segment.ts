@@ -7,6 +7,7 @@ import { ModalPage } from '../modal/modalpage';
 import { Geolocation } from '@ionic-native/geolocation';
 import { GoogleMap, GoogleMapsEvent, LatLng, MarkerOptions, Marker, CameraPosition } from '@ionic-native/google-maps';
 import { HttpService } from '../services/http.service';
+import { AddCafe } from '../addcafe/addcafe';
 
 declare var google;
 
@@ -34,7 +35,7 @@ export class SegmentPage implements OnInit {
   toValue: string;
   public items: any;
   cat: string = "cafelist";
-  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, public httpService: HttpService, public toastCtrl: ToastController, public geolocation: Geolocation, public navParams: NavParams, public cafeService: CafeService, public alertCtrl: AlertController, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, public httpService: HttpService, public toastCtrl: ToastController, public geolocation: Geolocation, public cafeService: CafeService, public alertCtrl: AlertController) {
     this.fromValue = '';
     this.toValue = '';
     {
@@ -52,76 +53,78 @@ export class SegmentPage implements OnInit {
     });
     toast.present();
   }
-  presentModal() {
+  // presentModal() {
 
-    let that = this;
-    let modal = this.modalCtrl.create(ModalPage,{mapAddress:this.locationCoordinates});
-    modal.present();
+  //   let that = this;
+  //   let modal = this.modalCtrl.create(ModalPage,{mapAddress:this.locationCoordinates});
+  //   modal.present();
 
-    modal.onDidDismiss(data => {
-      if (data == "success") {
-        that.presentToast();
-        that.postRequest();
-      }
-      else if (data != undefined) {
-
-        console.log("data " + data);
-        let url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + data + "&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
-
-        console.log(this.address.place);
-        this.httpService.post("", url).subscribe(data => {
-
-          console.log(data);
-          console.log(data.json);
-          console.log(data.json.results[0].formatted_address);
-          let ionic: LatLng = new LatLng(data.json.results[0].geometry.location.lat, data.json.results[0].geometry.location.lng);
-          console.log(data.json.results[0].geometry.location.lat);
-          console.log(data.json.results[0].geometry.location.lng);
-          let position: CameraPosition = {
-            target: ionic,
-            zoom: 18,
-            tilt: 30
-          };
-          this.map.moveCamera(position);
-          let markerOptions: MarkerOptions = {
-            position: ionic,
-            title: 'Ionic',
-            draggable: true
-          };
-          this.map.addMarker(markerOptions)
-            .then(
-            (marker: Marker) => {
-              mapMarker = marker;
-              console.log("marker");
-              marker.showInfoWindow();
-              marker.on(GoogleMapsEvent.MARKER_DRAG_END)
-                .subscribe(() => {
-                  marker.getPosition()
-                    .then((position: LatLng) => {
-                      this.locationCoordinates = position;
-                      console.log(this.locationCoordinates.lat);
-                      console.log(this.locationCoordinates.lng);
-                      console.log('Marker was moved to the following position: ', position);
-                    });
-                });
-            }
-            );
-
-        }, error => {
-          alert("error" + error);
-          console.log(error);
-
-        });
-      }
-
-      else {
-        console.log(data);
-      }
+  //   modal.onDidDismiss(data => {
+  //     if (data == "success") {
+  //       that.presentToast();
+  //       that.postRequest();
+  //     }
+  //     else if (data != undefined) {
 
 
-    });
+  //       this.cat == 'cafelocations';
+  //       console.log("data " + data);
+  //       let url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + data + "&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
 
-  }
+  //       console.log(this.address.place);
+  //       this.httpService.post("", url).subscribe(data => {
+
+  //         console.log(data);
+  //         console.log(data.json);
+  //         console.log(data.json.results[0].formatted_address);
+  //         let ionic: LatLng = new LatLng(data.json.results[0].geometry.location.lat, data.json.results[0].geometry.location.lng);
+  //         console.log(data.json.results[0].geometry.location.lat);
+  //         console.log(data.json.results[0].geometry.location.lng);
+  //         let position: CameraPosition = {
+  //           target: ionic,
+  //           zoom: 18,
+  //           tilt: 30
+  //         };
+  //         this.map.moveCamera(position);
+  //         let markerOptions: MarkerOptions = {
+  //           position: ionic,
+  //           title: 'Ionic',
+  //           draggable: true
+  //         };
+  //         this.map.addMarker(markerOptions)
+  //           .then(
+  //           (marker: Marker) => {
+  //             mapMarker = marker;
+  //             console.log("marker");
+  //             marker.showInfoWindow();
+  //             marker.on(GoogleMapsEvent.MARKER_DRAG_END)
+  //               .subscribe(() => {
+  //                 marker.getPosition()
+  //                   .then((position: LatLng) => {
+  //                     this.locationCoordinates = position;
+  //                     console.log(this.locationCoordinates.lat);
+  //                     console.log(this.locationCoordinates.lng);
+  //                     console.log('Marker was moved to the following position: ', position);
+  //                   });
+  //               });
+  //           }
+  //           );
+
+  //       }, error => {
+  //         alert("error" + error);
+  //         console.log(error);
+
+  //       });
+  //     }
+
+  //     else {
+  //       console.log(data);
+  //     }
+
+
+  //   });
+
+  // }
   updatePage(cat) {
     if (cat === 'cafelocations') {
       this.loadMap();
@@ -205,7 +208,8 @@ export class SegmentPage implements OnInit {
     if (mapMarker != undefined) {
       mapMarker.remove();
     }
-    this.presentModal();
+    //this.presentModal();
+     this.navCtrl.push(AddCafe);
 
   }
 

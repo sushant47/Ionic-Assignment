@@ -6,6 +6,7 @@ import { CafeOutlets } from '../cafeoutlets/cafeoutlets';
 import { TabsPage } from '../tabs/tabs';
 import { UserInputData } from '../userinputdata/UserInputData';
 import { URL } from '../constants/constants';
+import { SegmentPage } from '../segment/segment';
 
 @Component({
   selector: 'page-login',
@@ -36,10 +37,7 @@ export class Login {
     console.log(postParams.email);
     console.log(postParams.password);
     this.loginService.post(postParams, URL.USER_LOGIN_URL).subscribe(data => {
-      //alert("data " + data);
-      // console.log(data['_body']);
-      // var stat = data['_body'];
-      // stat = JSON.parse(data['_body']);
+     
       console.log(data);
 
       if (data.json.status == "SUCCESS") {
@@ -48,7 +46,7 @@ export class Login {
         localStorage.setItem("password", this.userLoginData.password);
         console.log(localStorage.getItem("userid"));
         console.log(localStorage.getItem("password"));
-        this.navCtrl.push(TabsPage);
+        this.navCtrl.push(SegmentPage);
 
       }
 

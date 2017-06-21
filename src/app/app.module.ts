@@ -16,6 +16,8 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { Keyboard } from '@ionic-native/keyboard';
 import { HttpService } from '../pages/services/http.service';
 import {SegmentPage} from '../pages/segment/segment';
+import { AddCafe } from '../pages/addcafe/addcafe';
+
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import {SegmentPage} from '../pages/segment/segment';
     ModalPage,
     TabsPage,
     CafeLocation,
-    SegmentPage
+    SegmentPage,
+    AddCafe
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,8 @@ import {SegmentPage} from '../pages/segment/segment';
     ModalPage,
     TabsPage,
     CafeLocation,
-    SegmentPage
+    SegmentPage,
+    AddCafe
   ],
   providers: [
     StatusBar,
