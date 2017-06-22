@@ -74,6 +74,7 @@ getAllCafeList(postParams, url:string){
       // var stat = data['_body'];
       // stat = JSON.parse(data['_body']);
       console.log("signup" + data.json);
+      console.log("data from service" + data);
 
       if (data.json.status == "SUCCESS") {
 

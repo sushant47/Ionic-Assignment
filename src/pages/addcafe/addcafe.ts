@@ -18,17 +18,18 @@ declare var google;
   providers: [CafeService, HttpService]
 })
 
-export class AddCafe{
+export class AddCafe {
 
+  locationCoordinates: any;
   myLong: number;
   myLat: number;
   map: any;
   autocompleteItems;
   autocomplete;
   userInputData: UserInputData = {};
-  coordinates:any;
+  coordinates: any;
   constructor(public geolocation: Geolocation, private cafeService: CafeService, private zone: NgZone, private viewCtrl: ViewController, public httpService: HttpService) {
-   // this.loadMap();
+    // this.loadMap();
     //console.log(this.params.get('mapAddress'));
     //this.coordinates = this.params.get('mapAddress');
     // if (this.coordinates != undefined) {
@@ -47,21 +48,21 @@ export class AddCafe{
     };
 
   }
- ionViewDidLoad() {
+  ionViewDidLoad() {
     console.log('ionViewDidLoad SegmentPage');
     this.loadMap();
 
   }
-loadMap() {
-alert("map");
+  loadMap() {
+    console.log("map");
     this.geolocation.getCurrentPosition().then((resp) => {
 
-      
+
       this.myLat = resp.coords.latitude;
       this.myLong = resp.coords.longitude;
       let location = new LatLng(this.myLat, this.myLong);
 
-      this.map = new GoogleMap('map', {
+      this.map = new GoogleMap('mapview', {
         'backgroundColor': 'white',
         'controls': {
           'compass': true,
@@ -95,20 +96,20 @@ alert("map");
 
   addCafe(): void {
 
-    if (this.coordinates != undefined) {
-      console.log("location coordinates " + this.coordinates.lat);
-      this.userInputData.location = {
-        name: this.userInputData.cafeName,
-        lat: this.coordinates.lat,
-        lng: this.coordinates.lng
-      };
+    // if (this.coordinates != undefined) {
+    //   console.log("location coordinates " + this.coordinates.lat);
+    //   this.userInputData.location = {
+    //     name: this.userInputData.cafeName,
+    //     lat: this.coordinates.lat,
+    //     lng: this.coordinates.lng
+    //   };
 
-      console.log("location coordinates set " + this.userInputData.location);
-    }
+    //   console.log("location coordinates set " + this.userInputData.location);
+    // }
     // google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
     let postParams = {
       name: this.userInputData.cafeName,
-      location: this.userInputData.location,
+      location: JSON.stringify(this.userInputData.location),
       description: this.userInputData.description,
       user_ref_id: localStorage.getItem("userid")
     }
@@ -139,9 +140,12 @@ alert("map");
 
 
   }
-dismiss(data) {
+
+  dismiss(data) {
+
     console.log("data " + data);
     this.viewCtrl.dismiss(data);
+    this.map.remove();
     //google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
   }
   loading() {
@@ -180,12 +184,82 @@ dismiss(data) {
     });
   }
   chooseItem(item: any) {
-   // alert("choosen");
+    // alert("choosen");
     console.log("item " + item);
-    this.userInputData.location = item;
-    this.viewCtrl.dismiss(item);
+    this.autocompleteItems = [];
+    let reverseGeocodeUrl = '';
+    let url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + item + "&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
+
+    this.httpService.post("", url).subscribe(data => {
+
+      
+      console.log(data);
+      console.log(data.json);
+      console.log(data.json.results[0].formatted_address);
+      let ionic: LatLng = new LatLng(data.json.results[0].geometry.location.lat, data.json.results[0].geometry.location.lng);
+      console.log(data.json.results[0].geometry.location.lat);
+      console.log(data.json.results[0].geometry.location.lng);
+       this.userInputData.location = {
+                    name: data.json.results[0].formatted_address,
+                    lat: data.json.results[0].geometry.location.lat,
+                    lng: data.json.results[0].geometry.location.lng
+                  };
+      let position: CameraPosition = {
+        target: ionic,
+        zoom: 18,
+        tilt: 30
+      };
+      this.map.moveCamera(position);
+      let markerOptions: MarkerOptions = {
+        position: ionic,
+        title: 'Ionic',
+        draggable: true
+      };
+      this.map.addMarker(markerOptions)
+        .then(
+        (marker: Marker) => {
+          console.log("marker");
+          marker.showInfoWindow();
+          marker.on(GoogleMapsEvent.MARKER_DRAG_END)
+            .subscribe(() => {
+              marker.getPosition()
+                .then((position: LatLng) => {
+                  this.locationCoordinates = position;
+                 
+                  reverseGeocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+position.lat+","+position.lng+"&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
+                  this.reverseGeoCode(reverseGeocodeUrl,position.lat,position.lng);
+                  console.log(this.locationCoordinates.lat);
+                  console.log(this.locationCoordinates.lng);
+                  console.log('Marker was moved to the following position: ', position);
+                });
+            });
+        }
+        );
+
+    }, error => {
+      alert("error" + error);
+      console.log(error);
+
+    });
+    //this.viewCtrl.dismiss(item)
   }
 
+reverseGeoCode(reverseGeocodeUrl, lattitude, longitude){
+  this.httpService.post("", reverseGeocodeUrl).subscribe(data => {
+     console.log(data);
+      console.log(data.json);
+      console.log(data.json.results[0].formatted_address);
+       this.userInputData.location = {
+                    name: data.json.results[0].formatted_address,
+                    lat: lattitude,
+                    lng: longitude
+                  };
+       console.log("user input location " + this.userInputData.location);           
+      let ionic: LatLng = new LatLng(data.json.results[0].geometry.location.lat, data.json.results[0].geometry.location.lng);
+      console.log(data.json.results[0].geometry.location.lat);
+      console.log(data.json.results[0].geometry.location.lng);
+  });
+}
   updateSearch() {
     if (this.autocomplete.query == '') {
       this.autocompleteItems = [];
@@ -197,10 +271,6 @@ dismiss(data) {
     //let predictions: any = [];
     let url: string = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + this.autocomplete.query + "&types=establishment&components=country:ind&location=18.5204,73.8567&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
     this.httpService.post("", url).subscribe(data => {
-      //alert("data " + data);
-      // console.log(data['_body']);
-      // var stat = data['_body'];
-      // stat = JSON.parse(data['_body']);
       console.log(data);
       console.log(data.json);
       console.log(data.json.predictions[0].description);
@@ -223,20 +293,8 @@ dismiss(data) {
 
     });
 
-    //  this.service.getPlacePredictions({ input: this.autocomplete.query, componentRestrictions: { country: 'IND' } }, function (predictions, status) {
-    //         if (status != google.maps.places.PlacesServiceStatus.OK) {
-    //             alert(status);
-    //             return;
-    //         }
-    //         me.autocompleteItems = [];
-    //   me.zone.run(function () {
-    //     predictions.forEach(function (prediction) {
-    //       me.autocompleteItems.push(prediction.description);
-    //     });
-    //   });
-    // });
   }
 
- 
+
 
 }

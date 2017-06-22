@@ -69,6 +69,7 @@ export class SegmentPage implements OnInit {
 
   //       this.cat == 'cafelocations';
   //       console.log("data " + data);
+  //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78
   //       let url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + data + "&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
 
   //       console.log(this.address.place);
@@ -169,7 +170,9 @@ export class SegmentPage implements OnInit {
         if (data.json.status == "SUCCESS") {
 
 
-          this.items = data.json.cafeList;
+          this.items = JSON.parse(JSON.stringify(data.json.cafeList));
+          console.log("items " + this.items);
+          
 
         }
 
