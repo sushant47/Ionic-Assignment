@@ -9,6 +9,7 @@ import { GoogleMap, GoogleMapsEvent, LatLng, MarkerOptions, Marker, CameraPositi
 import { HttpService } from '../services/http.service';
 import { AddCafe } from '../addcafe/addcafe';
 
+
 declare var google;
 
 let Title: string;
@@ -33,8 +34,10 @@ export class SegmentPage implements OnInit {
   map: any;
   fromValue: string;
   toValue: string;
-  public items: any;
-  cat: string = "cafelist";
+  public items;
+  cafeMenu: string = "cafelist";
+  public mapData:LatLng [];
+  public placeName:string [];
   constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, public httpService: HttpService, public toastCtrl: ToastController, public geolocation: Geolocation, public cafeService: CafeService, public alertCtrl: AlertController) {
     this.fromValue = '';
     this.toValue = '';
@@ -53,94 +56,32 @@ export class SegmentPage implements OnInit {
     });
     toast.present();
   }
-  // presentModal() {
-
-  //   let that = this;
-  //   let modal = this.modalCtrl.create(ModalPage,{mapAddress:this.locationCoordinates});
-  //   modal.present();
-
-  //   modal.onDidDismiss(data => {
-  //     if (data == "success") {
-  //       that.presentToast();
-  //       that.postRequest();
-  //     }
-  //     else if (data != undefined) {
-
-
-  //       this.cat == 'cafelocations';
-  //       console.log("data " + data);
-  //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78
-  //       let url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + data + "&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
-
-  //       console.log(this.address.place);
-  //       this.httpService.post("", url).subscribe(data => {
-
-  //         console.log(data);
-  //         console.log(data.json);
-  //         console.log(data.json.results[0].formatted_address);
-  //         let ionic: LatLng = new LatLng(data.json.results[0].geometry.location.lat, data.json.results[0].geometry.location.lng);
-  //         console.log(data.json.results[0].geometry.location.lat);
-  //         console.log(data.json.results[0].geometry.location.lng);
-  //         let position: CameraPosition = {
-  //           target: ionic,
-  //           zoom: 18,
-  //           tilt: 30
-  //         };
-  //         this.map.moveCamera(position);
-  //         let markerOptions: MarkerOptions = {
-  //           position: ionic,
-  //           title: 'Ionic',
-  //           draggable: true
-  //         };
-  //         this.map.addMarker(markerOptions)
-  //           .then(
-  //           (marker: Marker) => {
-  //             mapMarker = marker;
-  //             console.log("marker");
-  //             marker.showInfoWindow();
-  //             marker.on(GoogleMapsEvent.MARKER_DRAG_END)
-  //               .subscribe(() => {
-  //                 marker.getPosition()
-  //                   .then((position: LatLng) => {
-  //                     this.locationCoordinates = position;
-  //                     console.log(this.locationCoordinates.lat);
-  //                     console.log(this.locationCoordinates.lng);
-  //                     console.log('Marker was moved to the following position: ', position);
-  //                   });
-  //               });
-  //           }
-  //           );
-
-  //       }, error => {
-  //         alert("error" + error);
-  //         console.log(error);
-
-  //       });
-  //     }
-
-  //     else {
-  //       console.log(data);
-  //     }
-
-
-  //   });
-
-  // }
-  updatePage(cat) {
-    if (cat === 'cafelocations') {
+  
+  updatePage(cafeMenu) {
+    if (cafeMenu === 'cafelocations' && this.map != undefined) {
+      this.map.remove();
+      this.loadMap();
+    }
+    else if(this.map == undefined){
       this.loadMap();
     }
   }
 
-  
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad SegmentPage');
-
+    this.loadMap();
 
   }
   ionViewDidEnter() {
+   
     this.postRequest();
+     if(this.cafeMenu==='cafelocations'){
+     this.loadMap(); 
+    }
   }
+
+
 
   postRequest() {
 
@@ -161,18 +102,33 @@ export class SegmentPage implements OnInit {
 
       this.cafeService.getAllCafeList(postParams, URL.GET_CAFELIST_URL).subscribe(data => {
         loading.dismiss();
-        console.log(data);
+        console.log("getAllCafeList data " + data);
+       // console.log(data.cafeList[0].location.name);
 
-        console.log(data.json);
-        console.log(data.json.cafeList);
+        if (data.status == "SUCCESS") {
 
+          this.items = data.cafeList;
+          this.placeName = [];
+          this.mapData = [];
+          for (let i = 0; i < data.cafeList.length; i++) {
+            
+            console.log(this.items[i].location);
+            this.placeName[i] = data.cafeList[i].name;
+            this.mapData[i] = new LatLng(JSON.parse(data.cafeList[i].location).lat,JSON.parse(data.cafeList[i].location).lng); 
+            this.items[i].location = JSON.parse(data.cafeList[i].location);
+            
+            
+           
+          }
 
-        if (data.json.status == "SUCCESS") {
+          //this.posts = this.user_service.Get_User();
 
-
-          this.items = JSON.parse(JSON.stringify(data.json.cafeList));
+          //this.items = data.json.cafeList;
+          //this.items = data.json.cafeList;
           console.log("items " + this.items);
-          
+          //let a = JSON.stringify(this.items[43].location);
+          //console.log("items " + JSON.parse(this.items[43].location).name);
+
 
         }
 
@@ -211,8 +167,9 @@ export class SegmentPage implements OnInit {
     if (mapMarker != undefined) {
       mapMarker.remove();
     }
+    this.map.remove();
     //this.presentModal();
-     this.navCtrl.push(AddCafe);
+    this.navCtrl.push(AddCafe);
 
   }
 
@@ -220,7 +177,6 @@ export class SegmentPage implements OnInit {
 
     this.geolocation.getCurrentPosition().then((resp) => {
 
-      
       this.myLat = resp.coords.latitude;
       this.myLong = resp.coords.longitude;
       let location = new LatLng(this.myLat, this.myLong);
@@ -248,6 +204,19 @@ export class SegmentPage implements OnInit {
       });
 
       this.map.on(GoogleMapsEvent.MAP_READY).subscribe(() => {
+        for(let i=0;i<this.mapData.length;i++){
+       let markerOptions: MarkerOptions = {
+    position: this.mapData[i],
+    title: this.placeName[i]
+ };
+
+ const marker: Marker = this.map.addMarker(markerOptions)
+   .then((marker: Marker) => {
+     console.log(marker);
+      marker.showInfoWindow();
+    });
+        }
+  
         console.log('Map is ready!');
       });
 
@@ -257,7 +226,7 @@ export class SegmentPage implements OnInit {
 
   }
 
-  
+
 
   ngOnInit(): void {
 
@@ -269,39 +238,6 @@ export class SegmentPage implements OnInit {
 
   }
 
-  loading() {
-   
-    let input_from = (<HTMLInputElement>document.getElementById('journey_from'));
-    let input_to = (<HTMLInputElement>document.getElementById('journey_to'));
-
-    
-    let options = {
-      types: [],
-      componentRestrictions: { country: "IND" }
-    };
-
-    
-    let autocomplete1 = new google.maps.places.Autocomplete(input_from, options);
-    
-
-    
-    let self = this;
-
-    
-    google.maps.event.addListener(autocomplete1, 'place_changed', function () {
-
-      let place = autocomplete1.getPlace();
-      let geometry = place.geometry;
-      if ((geometry) !== undefined) {
-
-        console.log(place.name);
-
-        console.log(geometry.location.lng());
-
-        console.log(geometry.location.lat());
-
-      }
-    });
-  }
+  
 
 }

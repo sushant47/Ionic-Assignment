@@ -1,8 +1,10 @@
 <ion-header>
+   <ion-navbar>
   <ion-toolbar>
-    <ion-title>Enter address</ion-title>
+    <ion-title>Enter Cafe Location</ion-title>
     <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="true" (ionInput)="updateSearch()" (ionCancel)="dismiss()"></ion-searchbar>
   </ion-toolbar>
+   </ion-navbar>
 </ion-header>
 <ion-content padding class="background">
   <ion-list>
@@ -22,7 +24,7 @@
     (click)="addCafe()" ion-button block color="dark" outline>Add Cafe</button>
 
   <div id="mapcontainer">
-    <div #map id="mapview">
+    <div #mapview id="mapview">
     </div>
   </div>
 </ion-content>

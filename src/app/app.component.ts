@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Platform, LoadingController, ToastController } from 'ionic-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Platform, LoadingController, ToastController, NavController, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginService } from '../pages/services/login.service';
@@ -11,6 +11,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { SegmentPage } from '../pages/segment/segment';
 import { Keyboard } from '@ionic-native/keyboard';
 
+
 let loading: any;
 let lastTimeBackPress = 0;
 let timePeriodToExit = 2000;
@@ -20,12 +21,13 @@ let timePeriodToExit = 2000;
 })
 export class MyApp implements OnInit {
 
+   @ViewChild('myNav') nav: NavController
   rootPage: any;
-
-  constructor(private keyboard: Keyboard, private platform: Platform, public toastCtrl: ToastController, public loadingCtrl: LoadingController, statusBar: StatusBar, splashScreen: SplashScreen, private loginService: LoginService) {
+ 
+  constructor(public app: App,private keyboard: Keyboard, private platform: Platform, public toastCtrl: ToastController, public loadingCtrl: LoadingController, statusBar: StatusBar, splashScreen: SplashScreen, private loginService: LoginService) {
     platform.ready().then(() => {
 
-
+      let nav = this.app.getActiveNav();
       platform.registerBackButtonAction(() => this.myHandlerFunction());
       statusBar.styleDefault();
       splashScreen.hide();
@@ -33,19 +35,29 @@ export class MyApp implements OnInit {
   }
 
   myHandlerFunction() {
-    if (new Date().getTime() - lastTimeBackPress < timePeriodToExit) {
-      this.platform.exitApp();
+   
+     let activeVC = this.nav.getActive();
+    let page = activeVC.instance;
+    if (!(page instanceof SegmentPage)) {
+      this.nav.pop();
     }
     else {
-      let toast = this.toastCtrl.create({
-        message: "Press Again to Confirm Exit",
-        duration: 3000
-      });
-      toast.present();
-      lastTimeBackPress = new Date().getTime();
+      if (new Date().getTime() - lastTimeBackPress < timePeriodToExit) {
+        this.platform.exitApp();
+      }
+      else {
+        let toast = this.toastCtrl.create({
+          message: "Press Again to Confirm Exit",
+          duration: 3000
+        });
+        toast.present();
+        lastTimeBackPress = new Date().getTime();
+      }
     }
 
+
   }
+
 
   ngOnInit(): void {
     loading = this.loadingCtrl.create({
@@ -56,7 +68,7 @@ export class MyApp implements OnInit {
     if ("userid" in localStorage && "password" in localStorage) {
       loading.dismiss();
       this.rootPage = SegmentPage;
-      
+
     }
     else {
       loading.dismiss();

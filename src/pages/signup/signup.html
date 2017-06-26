@@ -20,8 +20,17 @@
 
                     <ion-item class="signup-input">
                         <ion-label floating>Email Id</ion-label>
-                        <ion-input type="email" [(ngModel)]="userInputData.emailId" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></ion-input>
+                        <ion-input type="email" [(ngModel)]="userInputData.emailId" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></ion-input>
                     </ion-item>
+
+                    <div [hidden]="email.valid || email.untouched">
+                        <div class="md-char-counter" *ngIf="email.errors && email.errors.required">
+                            Email is required
+                        </div>
+                        <div class="md-char-counter" *ngIf="email.errors && email.errors.pattern">
+                            Email is invalid
+                        </div>
+                    </div>
 
                     <ion-item class="signup-input">
                         <ion-label floating>Password</ion-label>
@@ -36,11 +45,12 @@
                 </ion-list>
             </ion-col>
         </ion-row>
-<button class="signup-button" [disabled]="!userInputData.userName || !userInputData.emailId || !userInputData.password || !userInputData.confirmPassword" (click) = "signUp()" ion-button block color="dark" outline >SignUp</button>
+        <button class="signup-button" [disabled]="!userInputData.userName || !userInputData.emailId || !userInputData.password || !userInputData.confirmPassword"
+            (click)="signUp()" ion-button block color="dark" outline>SignUp</button>
     </div>
 
 
-    
+
 
 
 </ion-content>

@@ -17,7 +17,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { HttpService } from '../pages/services/http.service';
 import {SegmentPage} from '../pages/segment/segment';
 import { AddCafe } from '../pages/addcafe/addcafe';
-
+import { KeysPipe } from'../pages/pipe/keys.pipe';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,8 @@ import { AddCafe } from '../pages/addcafe/addcafe';
     TabsPage,
     CafeLocation,
     SegmentPage,
-    AddCafe
+    AddCafe,
+    KeysPipe
   ],
   imports: [
     BrowserModule,

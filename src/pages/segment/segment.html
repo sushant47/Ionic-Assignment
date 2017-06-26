@@ -2,12 +2,9 @@
 
   <ion-navbar>
     <ion-title>Extentia Cafe Outlets</ion-title>
-    <!--<ion-buttons end>
-      <button ion-button (click)="addMarker()"><ion-icon name="add"></ion-icon>Add Marker</button>
-    </ion-buttons> -->
   </ion-navbar>
   <div padding>
-    <ion-segment [(ngModel)]="cat" (ionChange)="updatePage(cat)">
+    <ion-segment [(ngModel)]="cafeMenu" (ionChange)="updatePage(cafeMenu)">
       <ion-segment-button value="cafelist">
         Cafelist
       </ion-segment-button>
@@ -23,26 +20,28 @@
 <ion-content padding>
 
 
-  <div class="map-wrapper" [ngSwitch]="cat">
+  <div class="map-wrapper" [ngSwitch]="cafeMenu">
 
     <ion-list inset *ngSwitchCase="'cafelist'">
+
       <ion-item *ngFor="let item of items">
-        {{ item.name }}
-        <h2>{{item.location}}</h2>
+
+        <h2> {{ item.name }} </h2>
         <h2>{{item.location.name}}</h2>
         <h3>{{item.description}}</h3>
+
       </ion-item>
     </ion-list>
 
     <div #map id="map" *ngSwitchCase="'cafelocations'">
-    
+
     </div>
-   
+
   </div>
-  
+
 </ion-content>
 <ion-footer>
-    <ion-fab bottom left>
-  <button ion-fab mini (click)="addNewCafe()"><ion-icon name="add"></ion-icon></button>
-</ion-fab>
+  <ion-fab bottom left>
+    <button ion-fab mini (click)="addNewCafe()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
 </ion-footer>

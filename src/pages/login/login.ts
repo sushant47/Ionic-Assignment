@@ -29,18 +29,15 @@ export class Login {
       email: this.userLoginData.emailId,
       password: this.userLoginData.password
     }
-
-
-
-
+  
     console.log(URL);
     console.log(postParams.email);
     console.log(postParams.password);
     this.loginService.post(postParams, URL.USER_LOGIN_URL).subscribe(data => {
-     
+
       console.log(data);
 
-      if (data.json.status == "SUCCESS") {
+      if (data.status == "SUCCESS") {
 
         localStorage.setItem("userid", this.userLoginData.emailId);
         localStorage.setItem("password", this.userLoginData.password);

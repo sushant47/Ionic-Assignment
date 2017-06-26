@@ -43,14 +43,9 @@ export class SignUp{
     console.log(postParams.email);
     this.signUpService.post(postParams, URL.USER_REGISTERATION_URL).subscribe(data => {
 
-      // console.log(data['_body']);
-      // var stat = data['_body'];
-      // stat = JSON.parse(data['_body']);;
-      // console.log(stat.status);
+      console.log(data);
 
-      console.log(data.json);
-
-      if (data.json.status == "SUCCESS") {
+      if (data.status == "SUCCESS") {
 
         this.navCtrl.push(Login);
 

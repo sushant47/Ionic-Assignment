@@ -23,25 +23,13 @@ export class AddCafe {
   locationCoordinates: any;
   myLong: number;
   myLat: number;
-  map: any;
+  public mapview: any;
   autocompleteItems;
   autocomplete;
   userInputData: UserInputData = {};
   coordinates: any;
   constructor(public geolocation: Geolocation, private cafeService: CafeService, private zone: NgZone, private viewCtrl: ViewController, public httpService: HttpService) {
-    // this.loadMap();
-    //console.log(this.params.get('mapAddress'));
-    //this.coordinates = this.params.get('mapAddress');
-    // if (this.coordinates != undefined) {
-    //   console.log("location coordinates " + coordinates.lat);
-    //   this.userInputData.location = {
-    //     name: '',
-    //     lat: coordinates.lat,
-    //     lng: coordinates.lng
-    //   };
-
-    //   console.log("location coordinates set " + this.userInputData.location);
-    // }
+   
     this.autocompleteItems = [];
     this.autocomplete = {
       query: ''
@@ -62,7 +50,7 @@ export class AddCafe {
       this.myLong = resp.coords.longitude;
       let location = new LatLng(this.myLat, this.myLong);
 
-      this.map = new GoogleMap('mapview', {
+      this.mapview = new GoogleMap('mapview', {
         'backgroundColor': 'white',
         'controls': {
           'compass': true,
@@ -84,7 +72,7 @@ export class AddCafe {
         }
       });
 
-      this.map.on(GoogleMapsEvent.MAP_READY).subscribe(() => {
+      this.mapview.on(GoogleMapsEvent.MAP_READY).subscribe(() => {
         console.log('Map is ready!');
       });
 
@@ -95,18 +83,6 @@ export class AddCafe {
   }
 
   addCafe(): void {
-
-    // if (this.coordinates != undefined) {
-    //   console.log("location coordinates " + this.coordinates.lat);
-    //   this.userInputData.location = {
-    //     name: this.userInputData.cafeName,
-    //     lat: this.coordinates.lat,
-    //     lng: this.coordinates.lng
-    //   };
-
-    //   console.log("location coordinates set " + this.userInputData.location);
-    // }
-    // google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
     let postParams = {
       name: this.userInputData.cafeName,
       location: JSON.stringify(this.userInputData.location),
@@ -124,7 +100,7 @@ export class AddCafe {
       console.log(data);
 
 
-      if (data.json.status == "SUCCESS") {
+      if (data.status == "SUCCESS") {
 
         console.log("added successfully");
 
@@ -145,46 +121,12 @@ export class AddCafe {
 
     console.log("data " + data);
     this.viewCtrl.dismiss(data);
-    this.map.remove();
-    //google.maps.event.clearInstanceListeners(document.getElementById('journey_from'));
+    this.mapview.remove();
+    
   }
-  loading() {
-    //get the two fields
-    let input_from = (<HTMLInputElement>document.getElementById('journey_from'));
-    console.log(input_from);
-    //let input_to = (<HTMLInputElement>document.getElementById('journey_to'));
-
-    // set the options
-    let options = {
-      types: [],
-      componentRestrictions: { country: "IND" }
-    };
-
-    // create the two autocompletes on the from and to fields
-    let autocomplete1 = new google.maps.places.Autocomplete(input_from, options);
-    //let autocomplete2 = new google.maps.places.Autocomplete(input_to, options);
-
-    // we need to save a reference to this as we lose it in the callbacks
-    let self = this;
-
-    // add the first listener
-    google.maps.event.addListener(autocomplete1, 'place_changed', function () {
-
-      let place = autocomplete1.getPlace();
-      let geometry = place.geometry;
-      if ((geometry) !== undefined) {
-
-        console.log(place.name);
-
-        console.log(geometry.location.lng());
-
-        console.log(geometry.location.lat());
-
-      }
-    });
-  }
+  
   chooseItem(item: any) {
-    // alert("choosen");
+    
     console.log("item " + item);
     this.autocompleteItems = [];
     let reverseGeocodeUrl = '';
@@ -194,28 +136,27 @@ export class AddCafe {
 
       
       console.log(data);
-      console.log(data.json);
-      console.log(data.json.results[0].formatted_address);
-      let ionic: LatLng = new LatLng(data.json.results[0].geometry.location.lat, data.json.results[0].geometry.location.lng);
-      console.log(data.json.results[0].geometry.location.lat);
-      console.log(data.json.results[0].geometry.location.lng);
+      console.log(data.results[0].formatted_address);
+      let ionic: LatLng = new LatLng(data.results[0].geometry.location.lat, data.results[0].geometry.location.lng);
+      console.log(data.results[0].geometry.location.lat);
+      console.log(data.results[0].geometry.location.lng);
        this.userInputData.location = {
-                    name: data.json.results[0].formatted_address,
-                    lat: data.json.results[0].geometry.location.lat,
-                    lng: data.json.results[0].geometry.location.lng
+                    name: data.results[0].formatted_address,
+                    lat: data.results[0].geometry.location.lat,
+                    lng: data.results[0].geometry.location.lng
                   };
       let position: CameraPosition = {
         target: ionic,
         zoom: 18,
         tilt: 30
       };
-      this.map.moveCamera(position);
+      this.mapview.moveCamera(position);
       let markerOptions: MarkerOptions = {
         position: ionic,
         title: 'Ionic',
         draggable: true
       };
-      this.map.addMarker(markerOptions)
+      this.mapview.addMarker(markerOptions)
         .then(
         (marker: Marker) => {
           console.log("marker");
@@ -241,23 +182,23 @@ export class AddCafe {
       console.log(error);
 
     });
-    //this.viewCtrl.dismiss(item)
+    
   }
 
 reverseGeoCode(reverseGeocodeUrl, lattitude, longitude){
   this.httpService.post("", reverseGeocodeUrl).subscribe(data => {
      console.log(data);
-      console.log(data.json);
-      console.log(data.json.results[0].formatted_address);
+      console.log(data);
+      console.log(data.results[0].formatted_address);
        this.userInputData.location = {
-                    name: data.json.results[0].formatted_address,
+                    name: data.results[0].formatted_address,
                     lat: lattitude,
                     lng: longitude
                   };
        console.log("user input location " + this.userInputData.location);           
-      let ionic: LatLng = new LatLng(data.json.results[0].geometry.location.lat, data.json.results[0].geometry.location.lng);
-      console.log(data.json.results[0].geometry.location.lat);
-      console.log(data.json.results[0].geometry.location.lng);
+      let ionic: LatLng = new LatLng(data.results[0].geometry.location.lat, data.results[0].geometry.location.lng);
+      console.log(data.results[0].geometry.location.lat);
+      console.log(data.results[0].geometry.location.lng);
   });
 }
   updateSearch() {
@@ -268,20 +209,19 @@ reverseGeoCode(reverseGeocodeUrl, lattitude, longitude){
     let me = this;
     console.log("query " + this.autocomplete.query);
     this.autocompleteItems = [];
-    //let predictions: any = [];
+    let predictions: any = [];
     let url: string = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + this.autocomplete.query + "&types=establishment&components=country:ind&location=18.5204,73.8567&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
     this.httpService.post("", url).subscribe(data => {
       console.log(data);
-      console.log(data.json);
-      console.log(data.json.predictions[0].description);
+      console.log(data.predictions[0].description);
 
       me.zone.run(function () {
-        data.json.predictions.forEach(function (prediction) {
+        data.predictions.forEach(function (prediction) {
           me.autocompleteItems.push(prediction.description);
         });
       });
 
-      if (data.json.status == "SUCCESS") {
+      if (data.status == "SUCCESS") {
 
         console.log("success");
 
