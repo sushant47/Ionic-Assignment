@@ -20,7 +20,7 @@
 
                     <ion-item class="signup-input">
                         <ion-label floating>Email Id</ion-label>
-                        <ion-input type="email" [(ngModel)]="userInputData.emailId"></ion-input>
+                        <ion-input type="email" [(ngModel)]="userInputData.emailId" pattern="[a-zA-Z0-9!#$%&amp;'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*" required></ion-input>
                     </ion-item>
 
                     
@@ -40,9 +40,5 @@
         <button class="signup-button" [disabled]="!userInputData.userName || !userInputData.emailId || !userInputData.password || !userInputData.confirmPassword"
             (click)="signUp()" ion-button block color="dark" outline>SignUp</button>
     </div>
-
-
-
-
 
 </ion-content>

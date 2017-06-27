@@ -1,8 +1,8 @@
 export interface AlertControllerData {
-    
-    Title?: string;
-    Msg?: string;
-    Btn?: string;
-    
-    
+
+    title?: string;
+    msg?: string;
+    btn?: string;
+
+
 }

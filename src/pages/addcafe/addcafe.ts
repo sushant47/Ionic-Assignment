@@ -4,7 +4,7 @@ import { CafeService } from '../services/cafe.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { SegmentPage } from '../segment/segment';
 import 'rxjs/add/operator/map';
-import { URL } from '../constants/constants';
+import { URL, MAPS_URL } from '../constants/constants';
 import { UserInputData } from '../userinputdata/UserInputData';
 import { HttpService } from '../services/http.service';
 import { GoogleMap, GoogleMapsEvent, LatLng, MarkerOptions, Marker, CameraPosition } from '@ionic-native/google-maps';
@@ -29,7 +29,7 @@ export class AddCafe {
   userInputData: UserInputData = {};
   coordinates: any;
   constructor(public geolocation: Geolocation, private cafeService: CafeService, private zone: NgZone, private viewCtrl: ViewController, public httpService: HttpService) {
-   
+
     this.autocompleteItems = [];
     this.autocomplete = {
       query: ''
@@ -122,40 +122,41 @@ export class AddCafe {
     console.log("data " + data);
     this.viewCtrl.dismiss(data);
     this.mapview.remove();
-    
+
   }
-  
+
   chooseItem(item: any) {
-    
+
     console.log("item " + item);
     this.autocompleteItems = [];
-    let reverseGeocodeUrl = '';
-    let url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + item + "&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
+    console.log("url " + MAPS_URL.GET_LOCATION_URL + item + MAPS_URL.API_KEY);
+    this.httpService.post("", MAPS_URL.GET_LOCATION_URL + item + MAPS_URL.API_KEY).subscribe(data => {
 
-    this.httpService.post("", url).subscribe(data => {
-
-      
       console.log(data);
       console.log(data.results[0].formatted_address);
       let ionic: LatLng = new LatLng(data.results[0].geometry.location.lat, data.results[0].geometry.location.lng);
       console.log(data.results[0].geometry.location.lat);
       console.log(data.results[0].geometry.location.lng);
-       this.userInputData.location = {
-                    name: data.results[0].formatted_address,
-                    lat: data.results[0].geometry.location.lat,
-                    lng: data.results[0].geometry.location.lng
-                  };
+      this.userInputData.location = {
+        name: data.results[0].formatted_address,
+        lat: data.results[0].geometry.location.lat,
+        lng: data.results[0].geometry.location.lng
+      };
+
       let position: CameraPosition = {
         target: ionic,
         zoom: 18,
         tilt: 30
       };
+
       this.mapview.moveCamera(position);
+
       let markerOptions: MarkerOptions = {
         position: ionic,
-        title: 'Ionic',
+        title: this.userInputData.cafeName,
         draggable: true
       };
+
       this.mapview.addMarker(markerOptions)
         .then(
         (marker: Marker) => {
@@ -166,9 +167,8 @@ export class AddCafe {
               marker.getPosition()
                 .then((position: LatLng) => {
                   this.locationCoordinates = position;
-                 
-                  reverseGeocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+position.lat+","+position.lng+"&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
-                  this.reverseGeoCode(reverseGeocodeUrl,position.lat,position.lng);
+                  console.log("reverseGeocodeUrl " + MAPS_URL.REVERESE_GEOCODE_URL + position.lat + "," + position.lng + MAPS_URL.API_KEY);
+                  this.reverseGeoCode(MAPS_URL.REVERESE_GEOCODE_URL + position.lat + "," + position.lng + MAPS_URL.API_KEY, position.lat, position.lng);
                   console.log(this.locationCoordinates.lat);
                   console.log(this.locationCoordinates.lng);
                   console.log('Marker was moved to the following position: ', position);
@@ -182,25 +182,25 @@ export class AddCafe {
       console.log(error);
 
     });
-    
+
   }
 
-reverseGeoCode(reverseGeocodeUrl, lattitude, longitude){
-  this.httpService.post("", reverseGeocodeUrl).subscribe(data => {
-     console.log(data);
+  reverseGeoCode(reverseGeocodeUrl, lattitude, longitude) {
+    this.httpService.post("", reverseGeocodeUrl).subscribe(data => {
+      console.log(data);
       console.log(data);
       console.log(data.results[0].formatted_address);
-       this.userInputData.location = {
-                    name: data.results[0].formatted_address,
-                    lat: lattitude,
-                    lng: longitude
-                  };
-       console.log("user input location " + this.userInputData.location);           
+      this.userInputData.location = {
+        name: data.results[0].formatted_address,
+        lat: lattitude,
+        lng: longitude
+      };
+      console.log("user input location " + this.userInputData.location);
       let ionic: LatLng = new LatLng(data.results[0].geometry.location.lat, data.results[0].geometry.location.lng);
       console.log(data.results[0].geometry.location.lat);
       console.log(data.results[0].geometry.location.lng);
-  });
-}
+    });
+  }
   updateSearch() {
     if (this.autocomplete.query == '') {
       this.autocompleteItems = [];
@@ -209,9 +209,8 @@ reverseGeoCode(reverseGeocodeUrl, lattitude, longitude){
     let me = this;
     console.log("query " + this.autocomplete.query);
     this.autocompleteItems = [];
-    let predictions: any = [];
-    let url: string = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + this.autocomplete.query + "&types=establishment&components=country:ind&location=18.5204,73.8567&key=AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
-    this.httpService.post("", url).subscribe(data => {
+    console.log("url " + MAPS_URL.AUTOCOMPLETE_URL + this.autocomplete.query + MAPS_URL.AUTOCOMPLETE_URL_PARAMETERS);
+    this.httpService.post("", MAPS_URL.AUTOCOMPLETE_URL + this.autocomplete.query + MAPS_URL.AUTOCOMPLETE_URL_PARAMETERS).subscribe(data => {
       console.log(data);
       console.log(data.predictions[0].description);
 

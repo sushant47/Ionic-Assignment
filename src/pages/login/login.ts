@@ -5,13 +5,9 @@ import { SignUp } from '../signup/signup';
 import { CafeOutlets } from '../cafeoutlets/cafeoutlets';
 import { TabsPage } from '../tabs/tabs';
 import { UserInputData } from '../userinputdata/UserInputData';
-import { URL } from '../constants/constants';
+import { URL, STATUS_MSG, LOGIN_ALERT_CONSTANTS } from '../constants/constants';
 import { SegmentPage } from '../segment/segment';
 import { AlertControllerData } from "../userinputdata/alertcontrollerdata";
-
-let Title: string;
-let Msg: string;
-let btn: string;
 
 @Component({
   selector: 'page-login',
@@ -23,15 +19,16 @@ export class Login {
 
   private loading;
   userLoginData: UserInputData = {};
-  constructor(public alertCtrl:AlertController, public loadingCtrl: LoadingController, public navCtrl: NavController, private loginService: LoginService) {
+  alertControllerData: AlertControllerData = {};
+  constructor(public alertCtrl: AlertController, public loadingCtrl: LoadingController, public navCtrl: NavController, private loginService: LoginService) {
 
   }
 
   showAlert() {
     let alert = this.alertCtrl.create({
-      title: Title,
-      subTitle: Msg,
-      buttons: [btn]
+      title: this.alertControllerData.title,
+      subTitle: this.alertControllerData.msg,
+      buttons: [this.alertControllerData.btn]
     });
     alert.present();
   }
@@ -39,7 +36,7 @@ export class Login {
   login(): void {
 
     this.loading = this.loadingCtrl.create({
-      content: 'Please wait. Login in progress'
+      content: LOGIN_ALERT_CONSTANTS.LOGIN_LOADING_MESSAGE
     });
 
     this.loading.present();
@@ -56,7 +53,7 @@ export class Login {
 
       console.log(data);
 
-      if (data.status == "SUCCESS") {
+      if (data.status == STATUS_MSG.STATUS_MSG_SUCCESS) {
 
         this.loading.dismiss();
         localStorage.setItem("userid", this.userLoginData.emailId);
@@ -67,12 +64,22 @@ export class Login {
 
       }
 
+      else if (data.status == STATUS_MSG.STATUS_MSG_ERROR) {
+
+        this.loading.dismiss();
+        this.alertControllerData.title = LOGIN_ALERT_CONSTANTS.LOGIN_CREDENTIALS_ERROR_TITLE;
+        this.alertControllerData.msg = LOGIN_ALERT_CONSTANTS.LOGIN_CREDENTIALS_ERROR_TITLE_MSG;
+        this.alertControllerData.btn = LOGIN_ALERT_CONSTANTS.LOGIN_CREDENTIALS_ERROR_TITLE_BTN;
+        this.showAlert();
+
+      }
+
     }, error => {
 
       this.loading.dismiss();
-      Title = "Login Error";
-      Msg = "Please check username and password!";
-      btn = "OK";
+      this.alertControllerData.title = LOGIN_ALERT_CONSTANTS.LOGIN_NETWORK_ERROR_TITLE;
+      this.alertControllerData.msg = LOGIN_ALERT_CONSTANTS.LOGIN_NETWORK_ERROR_TITLE_MSG;
+      this.alertControllerData.btn = LOGIN_ALERT_CONSTANTS.LOGIN_NETWORK_ERROR_TITLE_BTN;
       this.showAlert();
       console.log(error);
 
@@ -83,11 +90,8 @@ export class Login {
 
   goBackSignUp(): void {
 
-
     this.navCtrl.push(SignUp);
 
-
   }
-
 
 }

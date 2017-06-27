@@ -1,51 +1,47 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, Platform, NavParams, AlertController, ModalController, ToastController, LoadingController } from 'ionic-angular';
 import { CafeService } from '../services/cafe.service';
-import { URL } from '../constants/constants';
+import { URL, STATUS_MSG, SEGMENT_ALERT_CONSTANTS } from '../constants/constants';
 import { Login } from '../login/login';
 import { ModalPage } from '../modal/modalpage';
 import { Geolocation } from '@ionic-native/geolocation';
 import { GoogleMap, GoogleMapsEvent, LatLng, MarkerOptions, Marker, CameraPosition } from '@ionic-native/google-maps';
 import { HttpService } from '../services/http.service';
 import { AddCafe } from '../addcafe/addcafe';
+import { AlertControllerData } from "../userinputdata/alertcontrollerdata";
 
 
-declare var google;
-
-let Title: string;
-let Msg: string;
-let btn: string;
 let user_id: string;
-let mapMarker: any;
-
 
 @Component({
   selector: 'page-segment',
   templateUrl: 'segment.html',
   providers: [CafeService, HttpService]
 })
-export class SegmentPage implements OnInit {
-  defaultZoom: any;
-  onLocationSelected: any;
+export class SegmentPage {
+
   myLong: number;
   myLat: number;
-  address;
   locationCoordinates: any;
   map: any;
-  fromValue: string;
-  toValue: string;
   public items;
   cafeMenu: string = "cafelist";
-  public mapData:LatLng [];
-  public placeName:string [];
+  public mapData: LatLng[];
+  public placeName: string[];
+  alertControllerData: AlertControllerData = {};
+
   constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, public httpService: HttpService, public toastCtrl: ToastController, public geolocation: Geolocation, public cafeService: CafeService, public alertCtrl: AlertController) {
-    this.fromValue = '';
-    this.toValue = '';
-    {
-      this.address = {
-        place: ''
-      };
-    }
+
+
+  }
+
+  showAlert() {
+    let alert = this.alertCtrl.create({
+      title: this.alertControllerData.title,
+      subTitle: this.alertControllerData.msg,
+      buttons: [this.alertControllerData.btn]
+    });
+    alert.present();
   }
 
   presentToast() {
@@ -56,13 +52,13 @@ export class SegmentPage implements OnInit {
     });
     toast.present();
   }
-  
+
   updatePage(cafeMenu) {
     if (cafeMenu === 'cafelocations' && this.map != undefined) {
       this.map.remove();
       this.loadMap();
     }
-    else if(this.map == undefined){
+    else if (this.map == undefined) {
       this.loadMap();
     }
   }
@@ -74,10 +70,10 @@ export class SegmentPage implements OnInit {
 
   }
   ionViewDidEnter() {
-   
+
     this.postRequest();
-     if(this.cafeMenu==='cafelocations'){
-     this.loadMap(); 
+    if (this.cafeMenu === 'cafelocations') {
+      this.loadMap();
     }
   }
 
@@ -86,7 +82,7 @@ export class SegmentPage implements OnInit {
   postRequest() {
 
     let loading = this.loadingCtrl.create({
-      content: 'Please wait...'
+      content: SEGMENT_ALERT_CONSTANTS.SEGMENT_LOADING_MESSAGE
     });
     loading.present();
 
@@ -103,38 +99,31 @@ export class SegmentPage implements OnInit {
       this.cafeService.getAllCafeList(postParams, URL.GET_CAFELIST_URL).subscribe(data => {
         loading.dismiss();
         console.log("getAllCafeList data " + data);
-       // console.log(data.cafeList[0].location.name);
 
-        if (data.status == "SUCCESS") {
+        if (data.status == STATUS_MSG.STATUS_MSG_SUCCESS) {
 
           this.items = data.cafeList;
           this.placeName = [];
           this.mapData = [];
           for (let i = 0; i < data.cafeList.length; i++) {
-            
+
             console.log(this.items[i].location);
             this.placeName[i] = data.cafeList[i].name;
-            this.mapData[i] = new LatLng(JSON.parse(data.cafeList[i].location).lat,JSON.parse(data.cafeList[i].location).lng); 
+            this.mapData[i] = new LatLng(JSON.parse(data.cafeList[i].location).lat, JSON.parse(data.cafeList[i].location).lng);
             this.items[i].location = JSON.parse(data.cafeList[i].location);
-            
-            
-           
+
           }
 
-          //this.posts = this.user_service.Get_User();
-
-          //this.items = data.json.cafeList;
-          //this.items = data.json.cafeList;
           console.log("items " + this.items);
-          //let a = JSON.stringify(this.items[43].location);
-          //console.log("items " + JSON.parse(this.items[43].location).name);
-
 
         }
 
       }, error => {
         loading.dismiss();
-        alert("error" + error);
+        this.alertControllerData.title = SEGMENT_ALERT_CONSTANTS.SEGMENT_LOADING_ERROR_TITLE;
+        this.alertControllerData.msg = SEGMENT_ALERT_CONSTANTS.SEGMENT_LOADING_ERROR_TITLE_MSG;
+        this.alertControllerData.btn = SEGMENT_ALERT_CONSTANTS.SEGMENT_LOADING_ERROR_TITLE_BTN;
+        this.showAlert();
         console.log(error);
 
       });
@@ -149,26 +138,12 @@ export class SegmentPage implements OnInit {
       this.navCtrl.push(Login);
     }
 
-
-
-
   }
 
-  showAlert() {
-    let alert = this.alertCtrl.create({
-      title: Title,
-      subTitle: Msg,
-      buttons: [btn]
-    });
-    alert.present();
-  }
 
   addNewCafe(): void {
-    if (mapMarker != undefined) {
-      mapMarker.remove();
-    }
+
     this.map.remove();
-    //this.presentModal();
     this.navCtrl.push(AddCafe);
 
   }
@@ -204,19 +179,19 @@ export class SegmentPage implements OnInit {
       });
 
       this.map.on(GoogleMapsEvent.MAP_READY).subscribe(() => {
-        for(let i=0;i<this.mapData.length;i++){
-       let markerOptions: MarkerOptions = {
-    position: this.mapData[i],
-    title: this.placeName[i]
- };
+        for (let i = 0; i < this.mapData.length; i++) {
+          let markerOptions: MarkerOptions = {
+            position: this.mapData[i],
+            title: this.placeName[i]
+          };
 
- const marker: Marker = this.map.addMarker(markerOptions)
-   .then((marker: Marker) => {
-     console.log(marker);
-      marker.showInfoWindow();
-    });
+          const marker: Marker = this.map.addMarker(markerOptions)
+            .then((marker: Marker) => {
+              console.log(marker);
+              marker.showInfoWindow();
+            });
         }
-  
+
         console.log('Map is ready!');
       });
 
@@ -225,19 +200,5 @@ export class SegmentPage implements OnInit {
     });
 
   }
-
-
-
-  ngOnInit(): void {
-
-
-  }
-
-  ngAfterViewInit(): void {
-    //this.loadMap();
-
-  }
-
-  
 
 }
