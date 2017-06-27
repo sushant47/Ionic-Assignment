@@ -39,7 +39,7 @@ export class Login {
   login(): void {
 
     this.loading = this.loadingCtrl.create({
-      content: 'Please wait...'
+      content: 'Please wait. Login in progress'
     });
 
     this.loading.present();

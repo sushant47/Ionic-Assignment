@@ -34,7 +34,7 @@ export class SignUp{
 
   registerUser() {
     this.loading = this.loadingCtrl.create({
-      content: 'Please wait...'
+      content: 'Please wait. SignUp in progress..'
     });
  this.loading.present();
     let postParams = {
