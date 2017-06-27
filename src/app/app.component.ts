@@ -21,10 +21,10 @@ let timePeriodToExit = 2000;
 })
 export class MyApp implements OnInit {
 
-   @ViewChild('myNav') nav: NavController
+  @ViewChild('myNav') nav: NavController
   rootPage: any;
- 
-  constructor(public app: App,private keyboard: Keyboard, private platform: Platform, public toastCtrl: ToastController, public loadingCtrl: LoadingController, statusBar: StatusBar, splashScreen: SplashScreen, private loginService: LoginService) {
+
+  constructor(public app: App, private keyboard: Keyboard, private platform: Platform, public toastCtrl: ToastController, public loadingCtrl: LoadingController, statusBar: StatusBar, splashScreen: SplashScreen, private loginService: LoginService) {
     platform.ready().then(() => {
 
       let nav = this.app.getActiveNav();
@@ -35,26 +35,18 @@ export class MyApp implements OnInit {
   }
 
   myHandlerFunction() {
-   
-     let activeVC = this.nav.getActive();
-    let page = activeVC.instance;
-    if (!(page instanceof SegmentPage)) {
-      this.nav.pop();
+
+    if (new Date().getTime() - lastTimeBackPress < timePeriodToExit) {
+      this.platform.exitApp();
     }
     else {
-      if (new Date().getTime() - lastTimeBackPress < timePeriodToExit) {
-        this.platform.exitApp();
-      }
-      else {
-        let toast = this.toastCtrl.create({
-          message: "Press Again to Confirm Exit",
-          duration: 3000
-        });
-        toast.present();
-        lastTimeBackPress = new Date().getTime();
-      }
+      let toast = this.toastCtrl.create({
+        message: "Press Again to Confirm Exit",
+        duration: 3000
+      });
+      toast.present();
+      lastTimeBackPress = new Date().getTime();
     }
-
 
   }
 

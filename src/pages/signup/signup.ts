@@ -4,7 +4,7 @@ import { Login } from '../login/login';
 import { SignupService } from '../services/signup.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { AlertController } from 'ionic-angular';
+import { AlertController, LoadingController } from 'ionic-angular';
 import { UserInputData } from '../userinputdata/UserInputData';
 import {URL} from '../constants/constants';
 
@@ -22,17 +22,21 @@ let btn: string;
 
 export class SignUp{
 
+  private loading;
   userInputData: UserInputData = {};
    
  
-  constructor(public navCtrl: NavController, public http: Http, private signUpService: SignupService, public alertCtrl: AlertController) {
+  constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, public http: Http, private signUpService: SignupService, public alertCtrl: AlertController) {
  
 
   }
 
 
   registerUser() {
-
+    this.loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+ this.loading.present();
     let postParams = {
       username: this.userInputData.userName,
       email: this.userInputData.emailId,
@@ -47,12 +51,17 @@ export class SignUp{
 
       if (data.status == "SUCCESS") {
 
+        this.loading.dismiss();
         this.navCtrl.push(Login);
 
       }
 
     }, error => {
-      alert("error" + error);
+      this.loading.dismiss();
+      Title = 'Sign Up Error';
+      Msg = 'Please Check your internet Connection';
+      btn = "OK";
+      this.showAlert();
       console.log(error);
 
     });
@@ -69,9 +78,6 @@ export class SignUp{
   signUp(): void {
 
     if ((this.userInputData.password == this.userInputData.confirmPassword) && (this.userInputData.password.length > 7) && (this.userInputData.confirmPassword.length > 7)) {
-
-
-
       this.registerUser();
     }
 
