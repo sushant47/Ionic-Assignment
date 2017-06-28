@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, LoadingController, AlertController } from 'ionic-angular';
 import { LoginService } from '../services/login.service';
 import { SignUp } from '../signup/signup';
-import { CafeOutlets } from '../cafeoutlets/cafeoutlets';
-import { TabsPage } from '../tabs/tabs';
 import { UserInputData } from '../userinputdata/UserInputData';
 import { URL, STATUS_MSG, LOGIN_ALERT_CONSTANTS } from '../constants/constants';
 import { SegmentPage } from '../segment/segment';

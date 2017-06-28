@@ -7,5 +7,6 @@ export interface UserInputData {
     cafeName?: string;
     location?: {name:string,lat:string,lng:string};
     description?: string;
+    deviceToken?: string; 
     
 }

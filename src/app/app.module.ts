@@ -7,17 +7,13 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import {SignUp} from '../pages/signup/signup';
 import {Login} from '../pages/login/login';
-import {CafeOutlets} from '../pages/cafeoutlets/cafeoutlets';
 import { HttpModule }    from '@angular/http';
-import { ModalPage } from '../pages/modal/modalpage';
-import { TabsPage } from '../pages/tabs/tabs';
-import { CafeLocation } from '../pages/cafelocation/cafelocation';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Keyboard } from '@ionic-native/keyboard';
 import { HttpService } from '../pages/services/http.service';
 import {SegmentPage} from '../pages/segment/segment';
 import { AddCafe } from '../pages/addcafe/addcafe';
-import { KeysPipe } from'../pages/pipe/keys.pipe';
+import { Push } from '@ionic-native/push';
 
 @NgModule({
   declarations: [
@@ -25,13 +21,8 @@ import { KeysPipe } from'../pages/pipe/keys.pipe';
     HomePage,
     SignUp,
     Login,
-    CafeOutlets,
-    ModalPage,
-    TabsPage,
-    CafeLocation,
     SegmentPage,
-    AddCafe,
-    KeysPipe
+    AddCafe
   ],
   imports: [
     BrowserModule,
@@ -44,10 +35,6 @@ import { KeysPipe } from'../pages/pipe/keys.pipe';
     HomePage,
     SignUp,
     Login,
-    CafeOutlets,
-    ModalPage,
-    TabsPage,
-    CafeLocation,
     SegmentPage,
     AddCafe
   ],
@@ -55,6 +42,7 @@ import { KeysPipe } from'../pages/pipe/keys.pipe';
     StatusBar,
     SplashScreen,
     Geolocation,
+    Push,
     Keyboard,
     HttpService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}

@@ -1,10 +1,12 @@
 const BASE_URL: string = 'https://extcafe.herokuapp.com';
 export const API_KEY: string = "AIzaSyARBYHwwK5uPoNuS2iN3UOg8fQGRgHLz78";
+export const SENDER_ID: string = '473136172745';
 export const URL = {
     USER_LOGIN_URL: BASE_URL + '/api/login',
     USER_REGISTERATION_URL: BASE_URL + '/api/register',
     ADD_CAFE_URL: BASE_URL + '/api/addCafe',
-    GET_CAFELIST_URL: BASE_URL + '/api/getCafeList'
+    GET_CAFELIST_URL: BASE_URL + '/api/getCafeList',
+    REGISTER_DEVICE: BASE_URL + '/api/registerDevice'
 };
 
 export const MAPS_URL = {

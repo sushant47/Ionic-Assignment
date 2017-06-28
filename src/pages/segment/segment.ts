@@ -3,13 +3,11 @@ import { IonicPage, NavController, Platform, NavParams, AlertController, ModalCo
 import { CafeService } from '../services/cafe.service';
 import { URL, STATUS_MSG, SEGMENT_ALERT_CONSTANTS } from '../constants/constants';
 import { Login } from '../login/login';
-import { ModalPage } from '../modal/modalpage';
 import { Geolocation } from '@ionic-native/geolocation';
 import { GoogleMap, GoogleMapsEvent, LatLng, MarkerOptions, Marker, CameraPosition } from '@ionic-native/google-maps';
 import { HttpService } from '../services/http.service';
 import { AddCafe } from '../addcafe/addcafe';
 import { AlertControllerData } from "../userinputdata/alertcontrollerdata";
-
 
 let user_id: string;
 
