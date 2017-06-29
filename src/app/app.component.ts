@@ -89,8 +89,13 @@ export class MyApp implements OnInit {
 
     pushObject.on('registration').subscribe((registration: any) => {
       console.log('Device registered ' + registration.registrationId);
+      localStorage.setItem("registration_id", registration.registrationId);
       this.userLoginData.deviceToken = registration.registrationId;
-      this.registerDevice();
+
+      if ("user_id" in localStorage){
+        this.registerDevice();
+      }
+
     });
 
 
@@ -111,18 +116,19 @@ export class MyApp implements OnInit {
   registerDevice(): any {
 
     let postParams = {
-      deviceToken: this.userLoginData.deviceToken,
-      userId: localStorage.getItem("userid")
+      deviceToken: localStorage.getItem("registration_id"),
+      userId: localStorage.getItem("user_id")
     }
 
-alert(postParams);
+    //alert(postParams);
 
-console.log("postparams " + postParams.userId);
+    console.log("postparams " + postParams.userId);
     this.httpService.post(postParams, URL.REGISTER_DEVICE).subscribe(data => {
 
       console.log("app component " + data);
 
       if (data.status == "SUCCESS") {
+
 
         alert("success");
 

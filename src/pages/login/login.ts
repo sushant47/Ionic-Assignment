@@ -6,11 +6,12 @@ import { UserInputData } from '../userinputdata/UserInputData';
 import { URL, STATUS_MSG, LOGIN_ALERT_CONSTANTS } from '../constants/constants';
 import { SegmentPage } from '../segment/segment';
 import { AlertControllerData } from "../userinputdata/alertcontrollerdata";
+import { HttpService } from "../services/http.service";
 
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
-  providers: [LoginService]
+  providers: [LoginService,HttpService]
 })
 
 export class Login {
@@ -18,7 +19,7 @@ export class Login {
   private loading;
   userLoginData: UserInputData = {};
   alertControllerData: AlertControllerData = {};
-  constructor(public alertCtrl: AlertController, public loadingCtrl: LoadingController, public navCtrl: NavController, private loginService: LoginService) {
+  constructor(public httpService: HttpService, public alertCtrl: AlertController, public loadingCtrl: LoadingController, public navCtrl: NavController, private loginService: LoginService) {
 
   }
 
@@ -50,14 +51,18 @@ export class Login {
     this.loginService.post(postParams, URL.USER_LOGIN_URL).subscribe(data => {
 
       console.log(data);
-
+      console.log("user_id " + data.user._id);
       if (data.status == STATUS_MSG.STATUS_MSG_SUCCESS) {
 
         this.loading.dismiss();
+        this.userLoginData.user_id = data.user._id;
         localStorage.setItem("userid", this.userLoginData.emailId);
         localStorage.setItem("password", this.userLoginData.password);
+        localStorage.setItem("user_id", this.userLoginData.user_id);
         console.log(localStorage.getItem("userid"));
+        console.log(localStorage.getItem("user_id"));
         console.log(localStorage.getItem("password"));
+        this.registerDevice();
         this.navCtrl.push(SegmentPage);
 
       }
@@ -91,5 +96,42 @@ export class Login {
     this.navCtrl.push(SignUp);
 
   }
+
+  registerDevice(): any {
+
+    let postParams = {
+      deviceToken: localStorage.getItem("registration_id"),
+      userId: localStorage.getItem("user_id")
+    }
+
+//alert(postParams);
+
+console.log("postparams " + postParams.userId);
+    this.httpService.post(postParams, URL.REGISTER_DEVICE).subscribe(data => {
+
+      console.log("app component " + data);
+
+      if (data.status == "SUCCESS") {
+
+
+        alert("success");
+
+      }
+
+      else if (data.status == "ERROR") {
+
+        alert("error");
+
+      }
+
+    }, error => {
+
+      alert("network error " + error);
+      console.log(error);
+
+    });
+
+  }
+
 
 }

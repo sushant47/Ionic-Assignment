@@ -8,5 +8,5 @@ export interface UserInputData {
     location?: {name:string,lat:string,lng:string};
     description?: string;
     deviceToken?: string; 
-    
+    user_id?: string;
 }
