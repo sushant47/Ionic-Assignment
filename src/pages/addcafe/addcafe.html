@@ -2,7 +2,7 @@
    <ion-navbar>
   <ion-toolbar>
     <ion-title>Enter Cafe Location</ion-title>
-    <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="true" (ionInput)="updateSearch()" (ionCancel)="dismiss()"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="true" (ionInput)="updateSearch()" (ionCancel)="dismiss()" [debounce]="300"></ion-searchbar>
   </ion-toolbar>
    </ion-navbar>
 </ion-header>

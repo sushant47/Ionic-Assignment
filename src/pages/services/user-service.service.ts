@@ -8,7 +8,7 @@ import { HttpService } from './http.service';
   providers: [HttpService]
 })
 @Injectable()
-export class LoginService {
+export class UserService {
   public response: any;
   constructor(private http: Http, private httpService: HttpService) { }
   postRequest(postParams, url: string) {
@@ -21,7 +21,15 @@ export class LoginService {
   }
 
 
-  post(postParams, url: string) {
+  login(postParams, url: string) {
+
+    console.log(postParams.email);
+    console.log(postParams.password);
+    return this.httpService.post(postParams, url);
+
+  }
+
+  signup(postParams, url: string) {
 
     console.log(postParams.email);
     console.log(postParams.password);

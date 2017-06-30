@@ -9,8 +9,6 @@ import { HttpService } from '../services/http.service';
 import { AddCafe } from '../addcafe/addcafe';
 import { AlertControllerData } from "../userinputdata/alertcontrollerdata";
 
-let user_id: string;
-
 @Component({
   selector: 'page-segment',
   templateUrl: 'segment.html',
@@ -84,14 +82,12 @@ export class SegmentPage {
     });
     loading.present();
 
-    console.log(localStorage.getItem("userid"));
     let postParams = {
-      userid: user_id
+      userid: localStorage.getItem("user_id")
     }
 
-    if ("userid" in localStorage) {
+    if ("user_id" in localStorage) {
 
-      user_id = localStorage.getItem("userid");
       console.log("reached");
 
       this.cafeService.getAllCafeList(postParams, URL.GET_CAFELIST_URL).subscribe(data => {
@@ -198,5 +194,10 @@ export class SegmentPage {
     });
 
   }
+
+logOut(){
+  localStorage.removeItem("user_id");
+  this.navCtrl.setRoot(Login);
+}
 
 }

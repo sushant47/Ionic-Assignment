@@ -1,7 +1,12 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Extentia Cafe Outlets</ion-title>
+    <ion-buttons left class="logout">
+      <button ion-button icon-only (click)="logOut()">
+        <ion-icon name="log-out"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center>Extentia Cafe Outlets</ion-title>
   </ion-navbar>
   <div padding>
     <ion-segment [(ngModel)]="cafeMenu" (ionChange)="updatePage(cafeMenu)">
@@ -26,9 +31,9 @@
 
       <ion-item *ngFor="let item of items">
 
-        <h2> {{ item.name }} </h2>
-        <h2>{{item.location.name}}</h2>
-        <h3>{{item.description}}</h3>
+        <h2 class='ellipsis'> {{ item.name }} </h2>
+        <h2 class='ellipsis'>{{item.location.name}}</h2>
+        <h3 class='ellipsis'>{{item.description}}</h3>
 
       </ion-item>
     </ion-list>

@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Platform, LoadingController, ToastController, NavController, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { LoginService } from '../pages/services/login.service';
 import { HomePage } from '../pages/home/home';
 import { SignUp } from '../pages/signup/signup';
 import { Login } from '../pages/login/login';
@@ -101,7 +100,7 @@ export class MyApp implements OnInit {
 
     pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
 
-    if ("userid" in localStorage && "password" in localStorage) {
+    if ("user_id" in localStorage) {
       loading.dismiss();
       this.rootPage = SegmentPage;
 
@@ -120,8 +119,6 @@ export class MyApp implements OnInit {
       userId: localStorage.getItem("user_id")
     }
 
-    //alert(postParams);
-
     console.log("postparams " + postParams.userId);
     this.httpService.post(postParams, URL.REGISTER_DEVICE).subscribe(data => {
 
@@ -130,19 +127,19 @@ export class MyApp implements OnInit {
       if (data.status == "SUCCESS") {
 
 
-        alert("success");
+        console.log("registration success");
 
       }
 
       else if (data.status == "ERROR") {
 
-        alert("error");
+        console.log("registration failed");
 
       }
 
     }, error => {
 
-      alert("network error " + error);
+    
       console.log(error);
 
     });
